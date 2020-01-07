@@ -1,5 +1,7 @@
 import React from "react"
 import { Button, InputGroup, FormControl, Modal } from 'react-bootstrap'
+import { signIn } from "./Redux/AuthenticationActions";
+import { store } from "../../../Utils/Redux/ConfigureStore";
 
 interface IProps {
 
@@ -9,11 +11,15 @@ interface IState {
 
 }
 
-export default class Login extends React.Component<IProps, IState> {
+class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
     }
 
+    onLoginClick = () => {
+        store.dispatch(signIn("abc", "def"))
+    }
+    
     render() {
         return (
             <div>
@@ -46,7 +52,7 @@ export default class Login extends React.Component<IProps, IState> {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Button variant="primary">Login</Button>
+                        <Button variant="primary" onClick={this.onLoginClick}>Login</Button>
                         <Button variant="secondary">Close</Button>
                     </Modal.Footer>
                 </Modal.Dialog>
@@ -54,3 +60,5 @@ export default class Login extends React.Component<IProps, IState> {
         )
     }
 }
+
+export default Login;

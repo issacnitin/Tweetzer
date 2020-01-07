@@ -1,5 +1,5 @@
-import { AuthenticationState } from "../Types/AuthenticationState";
-import { AuthenticationActionTypes } from "../Types/Actions";
+import { AuthenticationState } from "./AuthenticationState";
+import { AuthenticationActionTypes } from "../../../../Utils/Redux/Actions";
 
 const authReducerDefaultState: AuthenticationState = {} as AuthenticationState;
 
