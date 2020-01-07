@@ -1,4 +1,4 @@
-package tweet
+package social
 
 import (
 	"fmt"
@@ -33,9 +33,8 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/api/v1/tweet/search/{searchstring}", SearchTweet)
-		r.Get("/api/v1/tweet/getfeed", GetFeed)
-		r.Get("/api/v1/tweet/post_tweet", PostTweet)
+		r.Get("/api/v1/social/follow", Follow)
+		r.Get("/api/v1/social/getfollowers", GetFollowers)
 	})
 
 	// Public routes
@@ -46,14 +45,10 @@ func Routes() *chi.Mux {
 	return router
 }
 
-func PostTweet(w http.ResponseWriter, r *http.Request) {
+func Follow(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func SearchTweet(w http.ResponseWriter, r *http.Request) {
-
-}
-
-func GetFeed(w http.ResponseWriter, r *http.Request) {
+func GetFollowers(w http.ResponseWriter, r *http.Request) {
 
 }

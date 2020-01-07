@@ -17,6 +17,16 @@ services:
     depends_on:
     - "mongo"
     - "redis"
+  social: 
+    build:
+      context: .
+      dockerfile: ./social/Dockerfile
+    ports:
+    - "8082:8082"
+    depends_on:
+    - "mongo"
+    - "redis"
+    - "neo4j"
   redis:
     image: redis:latest
     ports:

@@ -134,7 +134,7 @@ func GetMe(w http.ResponseWriter, r *http.Request) {
 }
 
 // Untested
-func FindUser(w http.ResponseWriter, r *http.Request) {
+func SearchUser(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Sprintf("FindUser called")
 	ss := fmt.Sprintf("%s", chi.URLParam(r, "searchstring"))
