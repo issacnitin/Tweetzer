@@ -8,7 +8,7 @@ export const signIn = (username: string, password: string) : SignInAction => {
     let authState: AuthenticationState = store.getState().Authentication;
     authState.authToken = "token"
     authState.tokenRefreshTimestamp = 9999;
-    store.dispatch(changePage(Page.DEFAULT))
+    store.dispatch(changePage(Page.HOME))
     return {
         type: "SIGN_IN",
         authState
@@ -19,7 +19,7 @@ export const signUp = (username: string, email: string, password: string): SignU
     let authState: AuthenticationState = store.getState().Authentication;
     authState.authToken = "token"
     authState.tokenRefreshTimestamp = 9999;
-    store.dispatch(changePage(Page.DEFAULT))
+    store.dispatch(changePage(Page.HOME))
     return {
         type: "SIGN_UP",
         authState

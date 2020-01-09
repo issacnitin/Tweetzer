@@ -4,7 +4,7 @@ import { store } from "../../../Utils/Redux/ConfigureStore";
 import { TweetState } from "./Redux/TweetState";
 
 interface IProps {
-
+    
 }
 
 interface IState {
@@ -14,6 +14,11 @@ interface IState {
 export default class Feed extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
+        
+        this.state = {
+            tweets: []
+        }
+
         store.subscribe(() => {
             let tweets = store.getState().Tweet;
             this.setState({
