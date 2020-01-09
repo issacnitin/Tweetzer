@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import { Page } from '../Utils/Redux/SystemState';
 import Login from '../Pages/Components/Authentication/Login';
 import Register from '../Pages/Components/Authentication/Register';
+import Profile from '../Pages/Profile/Profile';
+import Home from '../Pages/Home/Home';
 
 interface IProps {
 
@@ -28,6 +30,7 @@ class App extends React.Component<IProps, IState> {
 
     store.subscribe(() => {
       let state = store.getState()
+      console.log(state.Authentication)
       this.setState({
         page: state.System.page,
         loggedIn: state.Authentication.authToken != ""
@@ -44,6 +47,15 @@ class App extends React.Component<IProps, IState> {
         break;
       case Page.SIGNUP:
         jsx = <Register />
+        break;
+      case Page.HOME:
+        jsx = <Home />
+        break;
+      case Page.PROFILE:
+        jsx = <Profile />
+        break;
+      default:
+        jsx = <div />
         break;
     }
 
