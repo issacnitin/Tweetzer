@@ -1,6 +1,6 @@
 import React from "react"
 import { Button, InputGroup, FormControl, Modal } from 'react-bootstrap'
-import { signIn } from "./Redux/AuthenticationActions";
+import { startSignIn } from "./Redux/AuthenticationActions";
 import { store } from "../../../Utils/Redux/ConfigureStore";
 
 interface IProps {
@@ -17,7 +17,7 @@ class Login extends React.Component<IProps, IState> {
     }
 
     onLoginClick = () => {
-        store.dispatch(signIn("abc", "def"))
+        store.dispatch(startSignIn("abc", "def"))
     }
     
     render() {

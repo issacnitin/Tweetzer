@@ -29,7 +29,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(b, &req)
 
 	filter := bson.D{
-		{"email", req.Email},
+		{"username", req.Username},
 	}
 
 	var profileInDB common.User

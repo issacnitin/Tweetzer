@@ -5,16 +5,31 @@ class AuthenticationAPI extends BaseAPI {
         super()
     }
 
-    signIn() {
-
+    async signIn(username: string, password: string) {
+        let response = await this.sendRequest("/api/v1/profile/signin", "POST", { "username": username, "password": password})
+        let responseJSON = await response.json();
+        return {
+            body: responseJSON.body,
+            statusCode: responseJSON.status
+        }
     }
 
-    signUp() {
-
+    async signUp(username: string, password: string) {
+        let response = await this.sendRequest("/api/v1/profile/register", "POST", { "username": username, "password": password})
+        let responseJSON = await response.json();
+        return {
+            body: responseJSON.body,
+            statusCode: responseJSON.status
+        }
     }
 
-    refreshToken() {
-
+    async refreshToken() {
+        let response = await this.sendRequest("/api/v1/profile/refreshtoken", "GET")
+        let responseJSON = await response.json();
+        return {
+            body: responseJSON.body,
+            statusCode: responseJSON.status
+        }
     }
 }
 
