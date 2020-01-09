@@ -1,5 +1,8 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from "react-bootstrap";
+import { store } from "../../Utils/Redux/ConfigureStore";
+import { changePage } from "../../Utils/Redux/SystemActions";
+import { Page } from '../../Utils/Redux/SystemState';
 
 interface IProps {
 
@@ -14,6 +17,14 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
         super(props)
     }
 
+    onClickHome = () => {
+        store.dispatch(changePage(Page.HOME))
+    }
+
+    onClickProfile = () => {
+        store.dispatch(changePage(Page.PROFILE))
+    }
+
     render() {
         return (
             <div>
@@ -22,7 +33,8 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
+                        <Nav.Link onClick={this.onClickHome}>Home</Nav.Link>
+                        <Nav.Link onClick={this.onClickProfile} >Profile</Nav.Link>
                         </Nav>
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" />

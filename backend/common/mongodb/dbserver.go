@@ -13,15 +13,15 @@ import (
 // Instance : Singleton Instance
 var Instance *mongo.Client
 var Profile *mongo.Collection
-var Travel *mongo.Collection
 var Social *mongo.Collection
+var Tweet *mongo.Collection
 
 func openDB() {
 	fmt.Printf("openDB called")
 	Instance, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongo:27017").SetAuth(options.Credential{
 		AuthSource: "admin",
-		Username:   "issacnitinmongod",
-		Password:   "iPhoneMyPh0ne!!",
+		Username:   "tweetzer",
+		Password:   "SomePassword1234",
 	}))
 	if err != nil {
 		fmt.Printf("%s", err.Error())
@@ -31,9 +31,9 @@ func openDB() {
 	if err != nil {
 		fmt.Printf("%s", err.Error())
 	}
-	Profile = Instance.Database("glimpse").Collection("profile")
-	Travel = Instance.Database("glimpse").Collection("travel")
-	Social = Instance.Database("glimpse").Collection("social")
+	Profile = Instance.Database("tweetzer").Collection("profile")
+	Social = Instance.Database("tweetzer").Collection("social")
+	Tweet = Instance.Database("tweetzer").Collection("tweet")
 }
 
 func init() {
@@ -43,7 +43,7 @@ func init() {
 
 func healthChecks() {
 	for true {
-		if Instance == nil || Profile == nil || Travel == nil || Social == nil {
+		if Instance == nil || Profile == nil || Tweet == nil || Social == nil {
 			openDB()
 		}
 		time.Sleep(10 * time.Second)

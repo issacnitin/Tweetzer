@@ -20,3 +20,7 @@ type Error struct {
 	Type    int    `json:"type"`
 	Message string `json:"message"`
 }
+
+type SearchText struct {
+	SearchText string `json:"search"`
+}
