@@ -1,17 +1,30 @@
 import React from "react"
 import { Button, InputGroup, FormControl, Modal } from 'react-bootstrap'
+import { store } from "../../../Utils/Redux/ConfigureStore"
+import { signUp } from "./Redux/AuthenticationActions";
 
 interface IProps {
 
 }
 
 interface IState {
-
+    username: string;
+    email: string;
+    password: string;
 }
 
 export default class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
+        this.state = {
+            username: "",
+            email: "",
+            password: ""
+        }
+    }
+
+    onRegisterClick = () => {
+        store.dispatch(signUp(this.state.username, this.state.email, this.state.password))
     }
 
     render() {
@@ -76,7 +89,7 @@ export default class Login extends React.Component<IProps, IState> {
                     </Modal.Body>
 
                     <Modal.Footer>
-                        <Button variant="primary">Register</Button>
+                        <Button variant="primary" onClick={this.onRegisterClick}>Register</Button>
                         <Button variant="secondary">Close</Button>
                     </Modal.Footer>
                 </Modal.Dialog>

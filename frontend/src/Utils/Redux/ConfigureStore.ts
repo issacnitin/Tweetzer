@@ -3,10 +3,12 @@ import thunk, { ThunkMiddleware } from "redux-thunk";
 import { authReducer } from "../../Pages/Components/Authentication/Redux/AuthenticationReducer";
 import { systemReducer } from "./SystemReducer";
 import { AppActions } from "./Actions";
+import { tweetReducer } from "../../Pages/Components/Tweet/Redux/TweetReducer";
 
 export const rootReducer = combineReducers({
     Authentication: authReducer,
-    System: systemReducer
+    System: systemReducer,
+    Tweet: tweetReducer
 });
 
 export type AppState = ReturnType<typeof rootReducer>

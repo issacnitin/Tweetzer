@@ -1,4 +1,5 @@
 import React from "react"
+import Feed from '../Components/Tweet/Feed';
 
 interface IProps {
 
@@ -15,7 +16,9 @@ export default class Mine extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div />
+            <div>
+                <Feed />
+            </div>
         )
     }
 }
