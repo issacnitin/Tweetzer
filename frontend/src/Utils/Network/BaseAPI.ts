@@ -1,14 +1,20 @@
 export default class BaseAPI {
 
-    baseURL: string = "localhost";
+    baseURL: string = "http://127.0.0.1";
     
-    constructor() {
-        
+    constructor(port?: string) {
+        if(!!port) {
+            this.baseURL += ":" + port;
+        }
     }
 
     sendRequest = (url: string, method: string = "GET", body?: any) : Promise<Response> => {
-        return fetch(this.baseURL + url[0] != "/" ? "/" : "" + url, {
+        console.log(this.baseURL)
+        console.log(url)
+        console.log(method)
+        return fetch(this.baseURL + (url[0] != "/" ? "/" : "") + url, {
             method: method,
+            mode: 'no-cors',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
