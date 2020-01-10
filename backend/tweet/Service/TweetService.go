@@ -1,6 +1,7 @@
 package tweet
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -63,14 +64,31 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var req Tweet
+	json.Unmarshal(b, &req)
 	var response struct {
 		result bool
 		value  string
 	}
+	var db DatabaseModal
 
-	json.Unmarshal(b, &req)
+	_, claims, err2 := jwtauth.FromContext(r.Context())
 
-	_, err = mongodb.Tweet.InsertOne(context.TODO(), req)
+	if err2 != nil {
+		fmt.Printf("%s", err2.Error())
+		http.Error(w, err2.Error(), http.StatusBadRequest)
+		return
+	}
+
+	profileId := fmt.Sprintf("%s", claims["profileid"])
+	filter := bson.D{{"profileId", profileId}}
+	err = mongodb.Tweet.FindOne(context.TODO(), filter).Decode(&db)
+	if err != nil {
+		http.Error(w, err.Error(), 500)
+	}
+
+	db.Tweets = append(db.Tweets, req)
+
+	_, err = mongodb.Tweet.InsertOne(context.TODO(), db)
 	if err != nil {
 		response.result = false
 		response.value = "Insertion failed, MongoDB unavailable at the moment"
@@ -128,25 +146,60 @@ func SearchTweet(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFeed(w http.ResponseWriter, r *http.Request) {
-	var result []Tweet
-	filter := bson.D{}
 
-	cur, err := mongodb.Tweet.Find(context.TODO(), filter)
+	profileId, err := GetProfileIdFromClaims(r)
+	printError(err, w)
+	reqbody, err := json.Marshal(map[string]string{
+		"profileId": profileId,
+	})
+	printError(err, w)
 
-	if err != nil {
-		http.Error(w, err.Error(), 500)
+	client := http.Client{
+		Timeout: 20000,
 	}
+	request, err := http.NewRequest("POST", "http://localhost:8081/api/v1/social/getfollowers", bytes.NewBuffer(reqbody))
+	request.Header.Set("Content-type", "application/json")
+	printError(err, w)
 
-	var x Tweet
-	for cur.Next(context.TODO()) {
-		err := cur.Decode(&x)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+	resp, err := client.Do(request)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	printError(err, w)
+	var followers []string
+	json.Unmarshal(body, &followers)
+
+	var result []Tweet
+	for follower := range followers {
+		filter := bson.D{{"profileId", follower}}
+		cur, err := mongodb.Tweet.Find(context.TODO(), filter)
+		printError(err, w)
+		var x Tweet
+		for cur.Next(context.TODO()) {
+			err := cur.Decode(&x)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			fmt.Printf("%s", x)
+			result = append(result, x)
 		}
-
-		fmt.Printf("%s", x)
-		result = append(result, x)
 	}
 
 	render.JSON(w, r, result)
+}
+
+func GetProfileIdFromClaims(r *http.Request) (string, error) {
+	_, claims, err2 := jwtauth.FromContext(r.Context())
+	if err2 != nil {
+		return "", err2
+	}
+	profileId := fmt.Sprintf("%s", claims["profileid"])
+	return profileId, nil
+}
+
+func printError(e error, w http.ResponseWriter) {
+	if e != nil {
+		http.Error(w, e.Error(), 500)
+	}
 }

@@ -39,15 +39,14 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/api/v1/social/follow", Follow)
-		r.Get("/api/v1/social/unfollow", UnFollow)
-		r.Get("/api/v1/social/getfollowers", GetFollowers)
-		r.Get("/api/v1/social/getfollowing", GetFollowing)
+		r.Post("/api/v1/social/follow", Follow)
+		r.Post("/api/v1/social/unfollow", UnFollow)
 	})
 
 	// Public routes
 	router.Group(func(r chi.Router) {
-
+		r.Get("/api/v1/social/getfollowers", GetFollowers)
+		r.Get("/api/v1/social/getfollowing", GetFollowing)
 	})
 
 	return router
