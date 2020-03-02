@@ -37,10 +37,11 @@ class App extends React.Component<IProps, IState> {
 
     store.subscribe(() => {
       let state = store.getState()
+      console.log(state)
       if(state.System.page != this.state.page) {
         this.setState({
           page: state.System.page,
-          loggedIn: state.Authentication.authToken != ""
+          loggedIn: !!state.Authentication.authToken && state.Authentication.authToken != ""
         });
       }
     })

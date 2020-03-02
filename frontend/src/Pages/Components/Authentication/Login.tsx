@@ -33,7 +33,7 @@ class Login extends React.Component<IProps, IState> {
     }
 
     onLoginClick = () => {
-        store.dispatch(startSignIn("abc", "def"))
+        store.dispatch(startSignIn(this.state.username, this.state.password))
     }
     
     onCloseClick = () => {

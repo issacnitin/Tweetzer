@@ -12,7 +12,7 @@ export const startSignIn = (username: string, password: string) : SignInAction =
     authAPIController.signIn(username, password)
     .then((res) => {
         let body = res.body
-        authState.authToken = !!body ? body.token : "";
+        authState.authToken = !!body ? body["Token"] : "";
         authState.tokenRefreshTimestamp = (new Date()).getTime();
         localStorage.setItem('username', username);
         localStorage.setItem('password', password);

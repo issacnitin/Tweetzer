@@ -18,7 +18,7 @@ export default class Tweet extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div>
+            <div style={{borderRadius: 10, background:'lightgrey', margin: 10}}>
                 {this.props.content}
                 {this.props.timestamp}
             </div>

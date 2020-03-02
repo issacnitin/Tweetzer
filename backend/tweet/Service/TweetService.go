@@ -92,25 +92,17 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profileId := fmt.Sprintf("%s", claims["profileid"])
-	filter := bson.D{{"profileId", profileId}}
-	err = mongodb.Tweet.FindOne(context.TODO(), filter).Decode(&db)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-
+	profileID := fmt.Sprintf("%s", claims["profileid"])
+	filter := bson.D{{"profileId", profileID}}
+	mongodb.Tweet.FindOne(context.TODO(), filter).Decode(&db)
 	db.Tweets = append(db.Tweets, req)
 
 	_, err = mongodb.Tweet.InsertOne(context.TODO(), db)
 	if err != nil {
 		response.result = false
 		response.value = "Insertion failed, MongoDB unavailable at the moment"
-		http.Error(w, response.value, 500)
+		http.Error(w, response.value, http.StatusInternalServerError)
 		return
-	}
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
 	response.result = true

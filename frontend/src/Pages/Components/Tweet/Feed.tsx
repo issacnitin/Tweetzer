@@ -31,9 +31,9 @@ export default class Feed extends React.Component<IProps, IState> {
         return (
             <div>
             {
-                this.state.tweets.map((el) => (
+                this.state.tweets.map((el, index) => (
                     <div>
-                        <Tweet content={el.content} timestamp={el.timestamp} />
+                        <Tweet key={index} content={el.content} timestamp={el.timestamp} />
                         <br />
                     </div>
                 ))
