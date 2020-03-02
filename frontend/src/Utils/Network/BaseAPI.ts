@@ -1,6 +1,6 @@
 export default class BaseAPI {
 
-    baseURL: string = "http://127.0.0.1";
+    baseURL: string = "http://tweetzer.com";
     
     constructor(port?: string) {
         if(!!port) {
@@ -8,13 +8,13 @@ export default class BaseAPI {
         }
     }
 
-    sendRequest = (url: string, method: string = "GET", body?: any) : Promise<Response> => {
+    sendRequest = (url: string, method: string = "GET", body?: any) : Promise<any> => {
         console.log(this.baseURL)
         console.log(url)
         console.log(method)
         return fetch(this.baseURL + (url[0] != "/" ? "/" : "") + url, {
             method: method,
-            mode: 'no-cors',
+            mode: 'cors',
             headers: {
                 'Accept': 'application/json, text',
                 'Content-Type': 'application/json'
@@ -24,7 +24,6 @@ export default class BaseAPI {
             body: JSON.stringify(body)
         })
         .then((response) => {
-            console.log(response)
             return response
         })
         .catch((error) => {

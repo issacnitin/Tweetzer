@@ -29,10 +29,9 @@ class App extends React.Component<IProps, IState> {
     }
 
     store.subscribe(() => {
+      console.log("Store changed")
       let state = store.getState()
       if(state.System.page != this.state.page) {
-        console.log(state.System.page);
-        console.log(this.state.page);
         this.setState({
           page: state.System.page,
           loggedIn: state.Authentication.authToken != ""
