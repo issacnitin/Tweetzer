@@ -1,6 +1,6 @@
 export default class BaseAPI {
 
-    baseURL: string = "https://127.0.0.1";
+    baseURL: string = "http://127.0.0.1";
     
     constructor(port?: string) {
         if(!!port) {
@@ -16,7 +16,7 @@ export default class BaseAPI {
             method: method,
             mode: 'no-cors',
             headers: {
-                'Accept': 'application/json',
+                'Accept': 'application/json, text',
                 'Content-Type': 'application/json'
             },
 
@@ -24,9 +24,11 @@ export default class BaseAPI {
             body: JSON.stringify(body)
         })
         .then((response) => {
+            console.log(response)
             return response
         })
         .catch((error) => {
+            console.error(error)
             throw error
         })
     }

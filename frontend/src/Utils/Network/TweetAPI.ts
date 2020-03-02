@@ -2,7 +2,7 @@ import BaseAPI from "./BaseAPI";
 
 export class TweetAPI extends BaseAPI {
     constructor() {
-        super("8080");
+        super();
     }
 
     async refresh() {

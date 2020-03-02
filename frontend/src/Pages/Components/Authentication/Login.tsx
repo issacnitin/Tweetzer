@@ -1,6 +1,6 @@
 import React from "react"
 import { Button, InputGroup, FormControl, Modal } from 'react-bootstrap'
-import { startSignIn } from "./Redux/AuthenticationActions";
+import { startSignIn, signOut } from "./Redux/AuthenticationActions";
 import { store } from "../../../Utils/Redux/ConfigureStore";
 
 interface IProps {
@@ -10,15 +10,34 @@ interface IProps {
 interface IState {
     username: string;
     password: string;
+    signInFailed: boolean;
 }
 
 class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
+
+        this.state = {
+            username: "",
+            password: "",
+            signInFailed: false
+        }
+
+        store.subscribe(() => {
+            let signInStatus = store.getState().Authentication.authToken == "";
+            console.log(signInStatus);
+            this.setState({
+                signInFailed: signInStatus
+            });
+        })
     }
 
     onLoginClick = () => {
         store.dispatch(startSignIn("abc", "def"))
+    }
+    
+    onCloseClick = () => {
+        store.dispatch(signOut())
     }
     
     handleChange = (e: any) => {
@@ -72,12 +91,19 @@ class Login extends React.Component<IProps, IState> {
                             />
                         </InputGroup>
                     </Modal.Body>
-
+                    { 
+                        this.state.signInFailed ? 
+                        <div className="alert alert-primary" role="alert">
+                            Sign in failed!
+                        </div> : 
+                        <div />
+                    }
                     <Modal.Footer>
                         <Button variant="primary" onClick={this.onLoginClick}>Login</Button>
-                        <Button variant="secondary">Close</Button>
+                        <Button variant="secondary" onClick={this.onCloseClick}>Close</Button>
                     </Modal.Footer>
                 </Modal.Dialog>
+                
             </div>
         )
     }

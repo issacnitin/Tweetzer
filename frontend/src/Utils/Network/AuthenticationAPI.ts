@@ -2,7 +2,7 @@ import BaseAPI from "./BaseAPI";
 
 class AuthenticationAPI extends BaseAPI {
     constructor() {
-        super("8080")
+        super()
     }
 
     async signIn(username: string, password: string) {
@@ -14,8 +14,8 @@ class AuthenticationAPI extends BaseAPI {
         }
     }
 
-    async signUp(username: string, password: string) {
-        let response = await this.sendRequest("/api/v1/profile/register", "POST", { "username": username, "password": password})
+    async signUp(username: string, email: string, password: string) {
+        let response = await this.sendRequest("/api/v1/profile/register", "POST", { "username": username, "email": email, "password": password})
         let responseJSON = await response.json();
         return {
             body: responseJSON.body,

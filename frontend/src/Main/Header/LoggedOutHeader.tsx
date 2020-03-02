@@ -19,8 +19,11 @@ export default class LoggedOutHeader extends React.Component<IProps, IState> {
     }
 
     onLoginClick = () => {
-        console.log("onLoginClick")
         store.dispatch(changePage(Page.LOGIN))
+    }
+
+    onRegisterClick = () => {
+        store.dispatch(changePage(Page.SIGNUP));
     }
 
     render() {
@@ -35,7 +38,7 @@ export default class LoggedOutHeader extends React.Component<IProps, IState> {
                         </Nav>
                         <Form inline>
                             <Button variant="primary" onClick={this.onLoginClick}>Login</Button>
-                            <Button variant="secondary">Register</Button>
+                            <Button variant="secondary" onClick={this.onRegisterClick}>Register</Button>
                         </Form>
                     </Navbar.Collapse>
                 </Navbar>

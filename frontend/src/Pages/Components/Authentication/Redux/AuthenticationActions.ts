@@ -15,7 +15,11 @@ export const startSignIn = (username: string, password: string) : SignInAction =
         authState.authToken = !!body ? body.token : "";
         authState.tokenRefreshTimestamp = (new Date()).getTime();
         store.dispatch(endSignIn(authState))
-    });
+    })
+    .catch((err) => {
+        console.log(err);
+        store.dispatch(endSignInWithFail(authState));
+    })
     return {
         type: "SIGN_IN",
         authState
@@ -30,14 +34,26 @@ export const endSignIn = (authState: AuthenticationState) : SignInAction => {
     } as SignInAction
 }
 
+export const endSignInWithFail = (authState: AuthenticationState): SignInAction => {
+    return {
+        type: "SIGN_IN",
+        authState
+    } as SignInAction
+}
+
 export const startSignUp = (username: string, email: string, password: string): SignUpAction => {
     let authState: AuthenticationState = store.getState().Authentication;
-    authAPIController.signUp(username, password)
+    authAPIController.signUp(username, email, password)
     .then((res) => {
         let body = res.body
         authState.authToken = !!body ? body.token : "";
         authState.tokenRefreshTimestamp = (new Date()).getTime();
+        console.log(authState)
         store.dispatch(endSignUp(authState))
+    })
+    .catch((err) => {
+        console.log(err)
+        store.dispatch(endSignUpFail(authState, err));
     });
     return {
         type: "SIGN_UP",
@@ -45,22 +61,28 @@ export const startSignUp = (username: string, email: string, password: string): 
     } as SignUpAction
 }
 
-export const endSignUp = (authState: AuthenticationState) : SignInAction => {
+export const endSignUp = (authState: AuthenticationState) : SignUpAction => {
     store.dispatch(changePage(Page.HOME))
     return {
-        type: "SIGN_IN",
+        type: "SIGN_UP",
         authState
-    } as SignInAction
+    } as SignUpAction
+}
+
+export const endSignUpFail = (authState: AuthenticationState, error: string) : SignUpAction => {
+    return {
+        type: "SIGN_UP",
+        authState
+    } as SignUpAction
 }
 
 export const signOut = (): SignOutAction => {
     let authState: AuthenticationState = store.getState().Authentication;
-    authState.authToken = "token"
+    authState.authToken = ""
     authState.tokenRefreshTimestamp = -1;
-    store.dispatch(changePage(Page.LOGIN))
+    store.dispatch(changePage(Page.DEFAULT))
     return {
         type: "SIGN_OUT",
         authState
     } as SignOutAction
 }
-

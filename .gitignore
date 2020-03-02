@@ -3,3 +3,5 @@ frontend/_build
 backend/social/src
 backend/profile/src
 backend/tweet/src
+.vscode/
+backend/profile/.devcontainer

@@ -6,9 +6,13 @@ const systemReducerDefaultState: SystemState = {
 } as SystemState;
 
 const systemReducer = (state = systemReducerDefaultState, action: SystemActionTypes) => {
+    console.log(action)
+    console.log(state)
     switch(action.type) {
-        default:
+        case "CHANGE_PAGE":
             state.page = action.page;
+            return state;
+        default:
             return state;
     }
 }

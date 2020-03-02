@@ -27,7 +27,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	var req common.User
 
 	json.Unmarshal(b, &req)
-	if req.Email == "" || req.Phone == "" || req.Password == "" {
+	if (req.Email == "" && req.Username == "") || req.Password == "" {
 		http.Error(w, fmt.Sprintf("Need email, phone and password for registration. Recieved %s", req), http.StatusInternalServerError)
 		return
 	}
