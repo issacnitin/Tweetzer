@@ -14,6 +14,8 @@ export const startSignIn = (username: string, password: string) : SignInAction =
         let body = res.body
         authState.authToken = !!body ? body.token : "";
         authState.tokenRefreshTimestamp = (new Date()).getTime();
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
         store.dispatch(endSignIn(authState))
     })
     .catch((err) => {
@@ -48,7 +50,8 @@ export const startSignUp = (username: string, email: string, password: string): 
         let body = res.body
         authState.authToken = !!body ? body.token : "";
         authState.tokenRefreshTimestamp = (new Date()).getTime();
-        console.log(authState)
+        localStorage.setItem('username', username ? username : email);
+        localStorage.setItem('password', password);
         store.dispatch(endSignUp(authState))
     })
     .catch((err) => {
@@ -62,6 +65,7 @@ export const startSignUp = (username: string, email: string, password: string): 
 }
 
 export const endSignUp = (authState: AuthenticationState) : SignUpAction => {
+    localStorage.setItem('token', authState.authToken);
     store.dispatch(changePage(Page.HOME))
     return {
         type: "SIGN_UP",

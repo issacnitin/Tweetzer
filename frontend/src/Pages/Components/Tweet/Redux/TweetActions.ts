@@ -32,16 +32,37 @@ export const endTweetRefresh = (tweets: TweetState[]) : TweetRefreshAction => {
     } as TweetRefreshAction
 }
 
-export const tweetPost = (content: string, timestamp: number) => {
+export const startTweetPost = (content: string, timestamp: number) : TweetPostAction => {
+    
     let tweet = {} as TweetState;
     tweet.content = content;
     tweet.timestamp = timestamp;
 
     let tweetState = store.getState().Tweet;
+    
+    let tweetApiController = new TweetAPI();
+    let tweets = store.getState().Tweet;
+    tweetApiController.postTweet(content)
+    .then((res) => {
+        if(res) {
+            tweetState.unshift({content: content, timestamp: timestamp} as TweetState)
+        }
+        store.dispatch(endTweetPost(tweets));
+    })
+    .catch((err) => {
+        store.dispatch(endTweetPost(tweets));
+    });
 
     return {
         type: "TWEET_POST",
-        tweetState
+        tweet: tweetState
+    }
+}
+
+export const endTweetPost = (tweets: TweetState[]) : TweetPostAction => {
+    return {
+        type: "TWEET_POST",
+        tweet: tweets
     }
 }
 

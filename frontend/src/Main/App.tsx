@@ -9,6 +9,7 @@ import Login from '../Pages/Components/Authentication/Login';
 import Register from '../Pages/Components/Authentication/Register';
 import Profile from '../Pages/Profile/Profile';
 import Home from '../Pages/Home/Home';
+import { startSignIn } from "../Pages/Components/Authentication/Redux/AuthenticationActions";
 
 interface IProps {
 
@@ -23,13 +24,18 @@ class App extends React.Component<IProps, IState> {
   
   constructor(props: IProps) {
     super(props)
+    let username = localStorage.getItem('username');
+    let password = localStorage.getItem('password');
+    if(username != null && password != null) {
+      store.dispatch(startSignIn(username, password))
+    }
+    
     this.state = {
       page: Page.DEFAULT,
       loggedIn: false
     }
 
     store.subscribe(() => {
-      console.log("Store changed")
       let state = store.getState()
       if(state.System.page != this.state.page) {
         this.setState({

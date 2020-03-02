@@ -55,8 +55,8 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Authenticator)
 
 		r.Get("/api/v1/tweet/search/{searchstring}", SearchTweet)
-		r.Get("/api/v1/tweet/getfeed", GetFeed)
-		r.Get("/api/v1/tweet/post_tweet", PostTweet)
+		r.Get("/api/v1/tweet/feed", GetFeed)
+		r.Get("/api/v1/tweet/post", PostTweet)
 	})
 
 	// Public routes
