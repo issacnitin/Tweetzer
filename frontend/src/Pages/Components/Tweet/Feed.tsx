@@ -1,8 +1,8 @@
 import React from "react";
 import Tweet from './Tweet';
-import { store } from "../../../Utils/Redux/ConfigureStore";
 import { TweetState } from "./Redux/TweetState";
-
+import { store } from "../../../Utils/Redux/ConfigureStore";
+import { startTweetRefresh } from "../Tweet/Redux/TweetActions";
 interface IProps {
     
 }
@@ -16,7 +16,7 @@ export default class Feed extends React.Component<IProps, IState> {
         super(props)
         
         this.state = {
-            tweets: []
+            tweets: store.getState().Tweet
         }
 
         store.subscribe(() => {
@@ -28,14 +28,15 @@ export default class Feed extends React.Component<IProps, IState> {
     }
 
     render() {
-
-
         return (
             <div>
             {
-                this.state.tweets.map((el) => {
-                    return <Tweet content={el.content} timestamp={el.timestamp} />
-                })
+                this.state.tweets.map((el) => (
+                    <div>
+                        <Tweet content={el.content} timestamp={el.timestamp} />
+                        <br />
+                    </div>
+                ))
             }
             </div>
         )

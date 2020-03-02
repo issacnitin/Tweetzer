@@ -8,7 +8,8 @@ interface IProps {
 }
 
 interface IState {
-
+    username: string;
+    password: string;
 }
 
 class Login extends React.Component<IProps, IState> {
@@ -20,6 +21,23 @@ class Login extends React.Component<IProps, IState> {
         store.dispatch(startSignIn("abc", "def"))
     }
     
+    handleChange = (e: any) => {
+        switch(e.target.name) {
+            case "username":
+                this.setState({
+                    username: e.target.value
+                });
+                break;
+            case "password":
+                this.setState({
+                    password: e.target.value
+                });
+                break;
+            default:
+                break;
+        }
+    }
+
     render() {
         return (
             <div>
@@ -30,23 +48,27 @@ class Login extends React.Component<IProps, IState> {
 
                     <Modal.Body>
                         <InputGroup className="mb-3">
-                        <InputGroup.Prepend>
-                        <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
-                        </InputGroup.Prepend>
-                        <FormControl
-                        placeholder="Username"
-                        aria-label="Username"
-                        aria-describedby="basic-addon1"
-                        />
+                            <InputGroup.Prepend>
+                            <InputGroup.Text id="basic-addon1">@</InputGroup.Text>
+                            </InputGroup.Prepend>
+                            <FormControl
+                            name="username"
+                            placeholder="Username"
+                            aria-label="Username"
+                            aria-describedby="basic-addon1"
+                            onChange={(e: any) => this.handleChange(e)}
+                            />
                         </InputGroup>
                         <InputGroup className="mb-3">
                             <InputGroup.Prepend>
                             <InputGroup.Text id="basic-addon1">Password</InputGroup.Text>
                             </InputGroup.Prepend>
                             <FormControl
+                            name="password"
                             placeholder=""
                             aria-label=""
                             aria-describedby="basic-addon1"
+                            onChange={(e: any) => this.handleChange(e)}
                             />
                         </InputGroup>
                     </Modal.Body>

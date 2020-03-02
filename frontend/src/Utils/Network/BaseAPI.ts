@@ -1,6 +1,6 @@
 export default class BaseAPI {
 
-    baseURL: string = "http://127.0.0.1";
+    baseURL: string = "https://127.0.0.1";
     
     constructor(port?: string) {
         if(!!port) {

@@ -11,6 +11,8 @@ const tweetReducer = (state = tweetReducerDefaultState, action: TweetActionTypes
             return state;
         case "TWEET_DELETE":
             return state;
+        case "TWEET_REFRESH":
+            return state;
         default:
             return state;
     }
