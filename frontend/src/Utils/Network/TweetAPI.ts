@@ -6,7 +6,7 @@ export class TweetAPI extends BaseAPI {
     }
 
     async refresh() {
-        let response = await this.sendRequest("/api/v1/tweet/refresh", "GET");
+        let response = await this.sendRequestAuthorized("/api/v1/tweet/refresh", "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON.body,
@@ -15,7 +15,7 @@ export class TweetAPI extends BaseAPI {
     }
 
     async postTweet(content: string) {
-        let response = await this.sendRequest("/api/v1/tweet/post", "POST", { "content": content });
+        let response = await this.sendRequestAuthorized("/api/v1/tweet/post", "POST", { "content": content });
         let responseJSON = await response.json();
         return {
             body: responseJSON.body,
