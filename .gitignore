@@ -5,3 +5,4 @@ backend/profile/src
 backend/tweet/src
 .vscode/
 backend/profile/.devcontainer
+backend/src/

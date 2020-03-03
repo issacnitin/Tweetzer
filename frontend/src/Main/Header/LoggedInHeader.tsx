@@ -3,6 +3,7 @@ import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from "react-boots
 import { store } from "../../Utils/Redux/ConfigureStore";
 import { changePage } from "../../Utils/Redux/SystemActions";
 import { Page } from '../../Utils/Redux/SystemState';
+import { signOut } from "../../Pages/Components/Authentication/Redux/AuthenticationActions";
 
 interface IProps {
 
@@ -25,6 +26,10 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
         store.dispatch(changePage(Page.PROFILE))
     }
 
+    onSignoutClick = () => {
+        store.dispatch(signOut())
+    }
+
     render() {
         return (
             <div>
@@ -39,6 +44,7 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                             <Button variant="outline-success">Search</Button>
+                            <Button variant="secondary" onClick={this.onSignoutClick}>Sign Out</Button>
                         </Form>
                     </Navbar.Collapse>
                 </Navbar>

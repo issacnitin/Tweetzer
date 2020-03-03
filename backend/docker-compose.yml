@@ -33,7 +33,7 @@ services:
     - "6379:6379"
     command: redis-server --requirepass SomePassword1234
     logging:
-      driver: "none"
+      driver: "json-file"
   mongo:
     image: mongo:latest
     ports:
@@ -49,7 +49,7 @@ services:
     volumes:
       - $HOME/mongod:/data/db
     logging:
-      driver: "none"
+      driver: "json-file"
   neo4jdb:
     image: neo4j:latest
     ports:
@@ -63,4 +63,4 @@ services:
     environment:
       - NEO4J_AUTH=neo4j/abc
     logging:
-      driver: "none"
+      driver: "json-file"

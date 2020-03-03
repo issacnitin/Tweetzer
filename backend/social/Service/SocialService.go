@@ -67,45 +67,6 @@ func Routes() *chi.Mux {
 	return router
 }
 
-func Follow(w http.ResponseWriter, r *http.Request) {
-	_, claims, err2 := jwtauth.FromContext(r.Context())
-
-	if err2 != nil {
-		fmt.Printf("%s", err2.Error())
-		http.Error(w, err2.Error(), http.StatusBadRequest)
-		return
-	}
-
-	profileId := fmt.Sprintf("%s", claims["profileid"])
-
-	var req struct {
-		followId string `json:"follow"`
-	}
-
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	json.Unmarshal(b, &req)
-
-	if err != nil {
-		http.Error(w, "Some error", 500)
-	}
-
-	result, err := neo4j.Instance.Run(
-		`MERGE (p:Profile { id: $id1 })
-		MERGE (q:Profile { id: $id2 })
-		MERGE (p)-[r:FOLLOWING]->(q)<-[s:FOLLOWEDBY]-(p)
-		RETURN p,q,r,s`, map[string]string{
-			"id1": profileId,
-			"id2": req.followId,
-		})
-
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-
-	render.JSON(w, r, "Success")
-}
-
 func UnFollow(w http.ResponseWriter, r *http.Request) {
 	_, claims, err2 := jwtauth.FromContext(r.Context())
 
@@ -128,50 +89,20 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Some error", 500)
 	}
-	result, err := neo4j.Instance.Run(
+	_, err3 := neo4j.Instance.Run(
 		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q:Profile { id: $id2 })
 		MATCH (s:Profile { id: $id2 })-[u:FOLLOWEDBY]->(t:Profile { id: $id1 })
 		DELETE r 
 		DELETE u`,
-		map[string]string{
+		map[string]interface{}{
 			"id1": profileId,
 			"id2": req.followId,
 		})
-	if err != nil {
+	if err3 != nil {
 		http.Error(w, err.Error(), 500)
 	}
 
 	render.JSON(w, r, "Success")
-}
-
-func GetFollowing(w http.ResponseWriter, r *http.Request) {
-	var req struct {
-		profileId string `json:"profileId"`
-	}
-
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	json.Unmarshal(b, &req)
-
-	profileId := req.profileId
-
-	var followings []string
-	result, err := neo4j.Instance.Run(
-		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q) \
-		RETURN q`,
-		map[string]string{
-			"id1": profileId,
-		})
-
-	if err != nil {
-		http.Error(w, "Neo4j Query failed", http.StatusInternalServerError)
-	}
-
-	for result.Next() {
-		followings = append(followings, result.Record().GetByIndex(1).(string))
-	}
-
-	render.JSON(w, r, followings)
 }
 
 func GetFollowers(w http.ResponseWriter, r *http.Request) {

@@ -54,10 +54,6 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	_, token, err := tokenAuth.Encode(claims)
 
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-
 	var response common.Token
 	response.Token = token
 	render.JSON(w, r, response)

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 
 	"../../common"
 	"../../common/mongodb"
@@ -114,28 +115,40 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 
 	profileId, err := GetProfileIdFromClaims(r)
 	printError(err, w)
-	reqbody, err := json.Marshal(map[string]string{
+	reqbody, err := json.Marshal(map[string]interface{}{
 		"profileId": profileId,
 	})
 	printError(err, w)
 
-	client := http.Client{
-		Timeout: 20000,
+	client := http.Client{}
+	token := GetTokenFromClaims(r)
+	if len(token) == 0 {
+		http.Error(w, "Failed to get token from request header", http.StatusInternalServerError)
 	}
-	request, err := http.NewRequest("POST", "http://social/api/v1/social/getfollowers", bytes.NewBuffer(reqbody))
-	request.Header.Set("Content-type", "application/json")
-	printError(err, w)
+	req, err := http.NewRequest("POST", "http://social:8082/api/v1/social/getfollowers", bytes.NewBuffer(reqbody))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", "Bearer "+token)
+	resp, err := client.Do(req)
 
-	resp, err := client.Do(request)
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 
 	printError(err, w)
 	var followers []string
 	json.Unmarshal(body, &followers)
 
+	followers = append(followers, profileId)
+
 	var result []Tweet
 	for follower := range followers {
+		fmt.Println(follower)
 		filter := bson.D{{"profileId", follower}}
 		cur, err := mongodb.Tweet.Find(context.TODO(), filter)
 		printError(err, w)
@@ -201,6 +214,16 @@ func GetProfileIdFromClaims(r *http.Request) (string, error) {
 	}
 	profileId := fmt.Sprintf("%s", claims["profileid"])
 	return profileId, nil
+}
+
+func GetTokenFromClaims(r *http.Request) string {
+	reqToken := r.Header.Get("Authorization")
+	splitToken := strings.Split(reqToken, "Bearer")
+	if len(splitToken) < 2 {
+		return ""
+	}
+	reqToken = splitToken[1]
+	return reqToken
 }
 
 func printError(e error, w http.ResponseWriter) {

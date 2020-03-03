@@ -41,16 +41,6 @@ func openDB() {
 
 func init() {
 	openDB()
-	go healthChecks()
-}
-
-func healthChecks() {
-	for true {
-		if Instance == nil || Profile == nil || Tweet == nil || Social == nil {
-			openDB()
-		}
-		time.Sleep(10 * time.Second)
-	}
 }
 
 func createIndexes() {
