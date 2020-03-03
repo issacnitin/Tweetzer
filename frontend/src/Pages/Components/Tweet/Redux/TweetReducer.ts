@@ -4,6 +4,8 @@ import { TweetActionTypes } from "../../../../Utils/Redux/Actions";
 const tweetReducerDefaultState: TweetState[] = [];
 
 const tweetReducer = (state = tweetReducerDefaultState, action: TweetActionTypes) => {
+    console.log(state)
+    console.log(action)
     switch(action.type) {
         case "TWEET_POST":
             return state;

@@ -11,11 +11,16 @@ export const startTweetRefresh = () : TweetRefreshAction => {
     tweetApiController.refresh()
     .then((res) => {
         let body = res.body
-        tweets = body;
+        tweets = [];
+        for(let tweet of body) {
+            let t : TweetState = {} as TweetState;
+            t.content = tweet["content"]
+            t.timestamp = tweet["timestamp"]
+            tweets.push(t)
+        }
         store.dispatch(endTweetRefresh(tweets));
     })
     .catch((err) => {
-        console.log(err);
         store.dispatch(endTweetRefresh(tweets));
     });
     return {
@@ -25,6 +30,7 @@ export const startTweetRefresh = () : TweetRefreshAction => {
 }
 
 export const endTweetRefresh = (tweets: TweetState[]) : TweetRefreshAction => {
+    store.getState().Tweet = tweets;
     store.dispatch(changePage(Page.HOME))
     return {
         type: "TWEET_REFRESH",

@@ -28,13 +28,14 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 	var req LoginUserRequest
 	json.Unmarshal(b, &req)
 
+	fmt.Println(req.Username)
 	filter := bson.D{
 		{"username", req.Username},
 	}
 
 	var profileInDB common.User
-
-	err = mongodb.Profile.FindOne(context.TODO(), filter).Decode(&profileInDB)
+	profileDb := mongodb.GetCollection("profile")
+	err = profileDb.FindOne(context.TODO(), filter).Decode(&profileInDB)
 
 	if err != nil {
 		http.Error(w, "Login failed, user not found", http.StatusBadRequest)

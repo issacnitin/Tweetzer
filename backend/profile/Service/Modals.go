@@ -7,6 +7,6 @@ type GetUserRequest struct {
 }
 
 type LoginUserRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+	Username string `json:"username" bson:"username"`
+	Password string `json:"password" bson:"password"`
 }

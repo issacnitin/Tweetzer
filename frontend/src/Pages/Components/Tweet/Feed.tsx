@@ -21,6 +21,7 @@ export default class Feed extends React.Component<IProps, IState> {
 
         store.subscribe(() => {
             let tweets = store.getState().Tweet;
+            tweets.sort((a, b) => b.timestamp - a.timestamp)
             this.setState({
                 tweets: tweets
             });

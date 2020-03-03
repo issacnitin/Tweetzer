@@ -45,7 +45,7 @@ services:
       - MONGO_ROOT_PASS=SomePassword1234
       - APP_MONGO_USER=tweetzer
       - APP_MONGO_PASS=SomePassword1234
-      - APP_MONGO_DB=glimpse
+      - APP_MONGO_DB=tweetzer
     volumes:
       - $HOME/mongod:/data/db
     logging:

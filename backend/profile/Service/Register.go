@@ -40,7 +40,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	// BIG TODO: Hash Password
 	// TODO: Assuming single email, that need not be the case, user can have multiple emails linked to same account
 	// For example, registration with a non google email and trying to register later with a google email
-	_, err = mongodb.Profile.InsertOne(context.TODO(), req)
+	profileDb := mongodb.GetCollection("profile")
+	_, err = profileDb.InsertOne(context.TODO(), req)
 	if err != nil {
 		http.Error(w, "Registration failed, MongoDB unavailable at the moment", 500)
 		return

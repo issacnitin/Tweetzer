@@ -19,7 +19,6 @@ export const startSignIn = (username: string, password: string) : SignInAction =
         store.dispatch(endSignIn(authState))
     })
     .catch((err) => {
-        console.log(err);
         store.dispatch(endSignInWithFail(authState));
     })
     return {

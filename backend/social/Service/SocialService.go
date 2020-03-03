@@ -89,7 +89,8 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Some error", 500)
 	}
-	_, err3 := neo4j.Instance.Run(
+	neo4jSession := neo4j.GetSessionWithReadWrite()
+	_, err = neo4jSession.Run(
 		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q:Profile { id: $id2 })
 		MATCH (s:Profile { id: $id2 })-[u:FOLLOWEDBY]->(t:Profile { id: $id1 })
 		DELETE r 
@@ -98,7 +99,7 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 			"id1": profileId,
 			"id2": req.followId,
 		})
-	if err3 != nil {
+	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
 

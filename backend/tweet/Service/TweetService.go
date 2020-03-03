@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
 
 	"../../common"
 	"../../common/mongodb"
@@ -79,11 +80,12 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 
 	var req Tweet
 	json.Unmarshal(b, &req)
+	req.Timestamp = time.Now().Unix()
+
 	var response struct {
 		result bool
 		value  string
 	}
-	var db DatabaseModal
 
 	_, claims, err2 := jwtauth.FromContext(r.Context())
 
@@ -94,16 +96,23 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	profileID := fmt.Sprintf("%s", claims["profileid"])
-	filter := bson.D{{"profileId", profileID}}
-	mongodb.Tweet.FindOne(context.TODO(), filter).Decode(&db)
-	db.Tweets = append(db.Tweets, req)
-
-	_, err = mongodb.Tweet.InsertOne(context.TODO(), db)
+	findFilter := bson.D{{"profileId", profileID}}
+	updateFilter := bson.M{"$push": bson.M{"tweets": req}}
+	var options options.UpdateOptions
+	var bb bool = true
+	options.Upsert = &bb
+	_, err = mongodb.Tweet.UpdateOne(context.TODO(), findFilter, updateFilter, &options)
 	if err != nil {
-		response.result = false
-		response.value = "Insertion failed, MongoDB unavailable at the moment"
-		http.Error(w, response.value, http.StatusInternalServerError)
-		return
+		var db DatabaseModal
+		db.ProfileId = profileID
+		db.Tweets = append(db.Tweets, req)
+		_, err2 = mongodb.Tweet.InsertOne(context.TODO(), db)
+		if err2 != nil {
+			response.result = false
+			response.value = "Insertion failed, MongoDB unavailable at the moment"
+			http.Error(w, response.value, http.StatusInternalServerError)
+			return
+		}
 	}
 
 	response.result = true
@@ -125,7 +134,7 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 	if len(token) == 0 {
 		http.Error(w, "Failed to get token from request header", http.StatusInternalServerError)
 	}
-	req, err := http.NewRequest("POST", "http://social:8082/api/v1/social/getfollowers", bytes.NewBuffer(reqbody))
+	req, err := http.NewRequest("GET", "http://social:8082/api/v1/social/getfollowing", bytes.NewBuffer(reqbody))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -141,26 +150,29 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 	}
 
 	printError(err, w)
-	var followers []string
-	json.Unmarshal(body, &followers)
+	var following []string
+	json.Unmarshal(body, &following)
 
-	followers = append(followers, profileId)
+	following = append(following, profileId)
 
 	var result []Tweet
-	for follower := range followers {
+	for _, follower := range following {
 		fmt.Println(follower)
 		filter := bson.D{{"profileId", follower}}
 		cur, err := mongodb.Tweet.Find(context.TODO(), filter)
-		printError(err, w)
-		var x Tweet
-		for cur.Next(context.TODO()) {
-			err := cur.Decode(&x)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
+		if err == nil {
+			var x DatabaseModal
+			for cur.Next(context.TODO()) {
+				err := cur.Decode(&x)
+				if err != nil {
+					http.Error(w, err.Error(), http.StatusInternalServerError)
+				}
 
-			fmt.Printf("%s", x)
-			result = append(result, x)
+				fmt.Printf("%s", x)
+				result = append(result, x.Tweets...)
+			}
+		} else {
+			fmt.Println("Error found fetching tweets")
 		}
 	}
 
@@ -223,6 +235,7 @@ func GetTokenFromClaims(r *http.Request) string {
 		return ""
 	}
 	reqToken = splitToken[1]
+	fmt.Println(reqToken)
 	return reqToken
 }
 

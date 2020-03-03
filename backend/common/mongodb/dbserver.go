@@ -43,10 +43,37 @@ func init() {
 	openDB()
 }
 
+func GetCollection(collectionName string) *mongo.Collection {
+	fmt.Printf("openDB called")
+	Instance, err := mongo.NewClient(options.Client().ApplyURI("mongodb://mongo:27017").SetAuth(options.Credential{
+		AuthSource: "admin",
+		Username:   "tweetzer",
+		Password:   "SomePassword1234",
+	}))
+	if err != nil {
+		fmt.Printf("%s", err.Error())
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = Instance.Connect(ctx)
+	if err != nil {
+		fmt.Printf("%s", err.Error())
+	}
+	switch collectionName {
+	case "profile":
+		return Instance.Database("tweetzer").Collection("profile")
+	case "tweet":
+		return Instance.Database("tweetzer").Collection("tweet")
+	case "social":
+		return Instance.Database("tweetzer").Collection("social")
+	default:
+		return nil
+	}
+}
+
 func createIndexes() {
 	mod := mongo.IndexModel{
 		Keys: bson.M{
-			"tweets.content": 1, // index in ascending order
+			"profileId": 1, // index in ascending order
 		}, Options: nil,
 	}
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)

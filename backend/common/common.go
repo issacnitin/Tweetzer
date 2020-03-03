@@ -7,13 +7,13 @@ type Token struct {
 }
 
 type User struct {
-	ProfileId string `json:"profileid"`
+	ProfileId string `json:"profileid" bson:"profileid"`
 	Name      string `json:"name"`
 	Email     string `json:"email"`
 	Phone     string `json:"phone"`
 	Country   string `json:"country"`
-	Username  string `json:"username"`
-	Password  string `json:"password"`
+	Username  string `json:"username" bson:"username"`
+	Password  string `json:"password" bson:"password"`
 }
 
 type Error struct {

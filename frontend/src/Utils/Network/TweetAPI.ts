@@ -9,8 +9,8 @@ export class TweetAPI extends BaseAPI {
         let response = await this.sendRequestAuthorized("/api/v1/tweet/feed", "GET");
         let responseJSON = await response.json();
         return {
-            body: responseJSON.body,
-            statusCode: responseJSON.status
+            body: responseJSON,
+            statusCode: response.status
         }
     }
 
@@ -18,8 +18,8 @@ export class TweetAPI extends BaseAPI {
         let response = await this.sendRequestAuthorized("/api/v1/tweet/post", "POST", { "content": content });
         let responseJSON = await response.json();
         return {
-            body: responseJSON.body,
-            statusCode: responseJSON.status
+            body: responseJSON,
+            statusCode: response.status
         }
     }
 }
