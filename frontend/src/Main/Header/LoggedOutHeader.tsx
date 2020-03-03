@@ -30,7 +30,7 @@ export default class LoggedOutHeader extends React.Component<IProps, IState> {
         return (
             <div>
                 <Navbar bg="light" expand="lg">
-                    <Navbar.Brand href="#home">Twitzer</Navbar.Brand>
+                    <Navbar.Brand href="#home">Tweetzer</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">

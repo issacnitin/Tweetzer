@@ -73,14 +73,23 @@ func GetCollection(collectionName string) *mongo.Collection {
 func createIndexes() {
 	mod := mongo.IndexModel{
 		Keys: bson.M{
-			"profileId": 1, // index in ascending order
+			"content": 1, // index in ascending order
 		}, Options: nil,
 	}
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	ind, err := Tweet.Indexes().CreateOne(ctx, mod, nil)
 	if err != nil {
-		fmt.Println("Error creating index")
-		return
+		fmt.Println("Error creating index for Tweet collection")
+	}
+
+	mod = mongo.IndexModel{
+		Keys: bson.M{
+			"profileid": 1, // index in ascending order
+		}, Options: nil,
+	}
+	ind, err = Profile.Indexes().CreateOne(ctx, mod, nil)
+	if err != nil {
+		fmt.Println("Error creating index for Profile collection")
 	}
 	fmt.Println("CreateOne() index:", ind)
 	fmt.Println("CreateOne() type:", reflect.TypeOf(ind), "\n")

@@ -16,6 +16,7 @@ export const startTweetRefresh = () : TweetRefreshAction => {
             let t : TweetState = {} as TweetState;
             t.content = tweet["content"]
             t.timestamp = tweet["timestamp"]
+            t.profileId = tweet["profileId"]
             tweets.push(t)
         }
         store.dispatch(endTweetRefresh(tweets));
@@ -48,10 +49,12 @@ export const startTweetPost = (content: string, timestamp: number) : TweetPostAc
     
     let tweetApiController = new TweetAPI();
     let tweets = store.getState().Tweet;
+    let profileId = store.getState().System.myid;
+    profileId = !!profileId ? profileId : ""
     tweetApiController.postTweet(content)
     .then((res) => {
         if(res) {
-            tweetState.unshift({content: content, timestamp: timestamp} as TweetState)
+            tweetState.unshift({content: content, timestamp: timestamp, profileId: profileId} as TweetState)
         }
         store.dispatch(endTweetPost(tweets));
     })

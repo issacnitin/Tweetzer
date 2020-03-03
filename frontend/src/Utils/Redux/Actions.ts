@@ -1,6 +1,7 @@
 import { AuthenticationState } from "../../Pages/Components/Authentication/Redux/AuthenticationState";
 import { Page } from "./SystemState";
 import { TweetState } from "../../Pages/Components/Tweet/Redux/TweetState";
+import { endTweetRefresh } from "../../Pages/Components/Tweet/Redux/TweetActions";
 
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_OUT = "SIGN_OUT";
@@ -10,6 +11,7 @@ export const TWEET_POST = "TWEET_POST";
 export const TWEET_DELETE = "TWEET_DELETE";
 export const TWEET_EDIT = "TWEET_EDIT";
 export const TWEET_REFRESH = "TWEET_REFRESH";
+export const SET_PROFILE = "SET_PROFILE";
 
 export interface SignInAction {
     type: typeof SIGN_IN;
@@ -29,6 +31,11 @@ export interface SignUpAction {
 export interface ChangePageAction {
     type: typeof CHANGE_PAGE;
     page: Page
+}
+
+export interface SetProfileAction {
+    type: typeof SET_PROFILE;
+    profileId: string
 }
 
 export interface TweetPostAction {
@@ -52,6 +59,6 @@ export interface TweetRefreshAction {
 }
 
 export type AuthenticationActionTypes = SignInAction | SignOutAction | SignUpAction;
-export type SystemActionTypes = ChangePageAction;
+export type SystemActionTypes = ChangePageAction | SetProfileAction;
 export type TweetActionTypes = TweetPostAction | TweetDeleteAction | TweetEditAction | TweetRefreshAction;
 export type AppActions = AuthenticationActionTypes | SystemActionTypes | TweetActionTypes;

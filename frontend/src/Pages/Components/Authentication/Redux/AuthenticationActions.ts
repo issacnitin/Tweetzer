@@ -1,7 +1,7 @@
 import { AuthenticationState } from "./AuthenticationState"
 import { SignInAction, SignOutAction, SignUpAction } from "../../../../Utils/Redux/Actions";
 import { AppState, store } from "../../../../Utils/Redux/ConfigureStore";
-import { changePage } from "../../../../Utils/Redux/SystemActions";
+import { changePage, setMyProfile } from "../../../../Utils/Redux/SystemActions";
 import { Page } from "../../../../Utils/Redux/SystemState";
 import AuthenticationAPI from "../../../../Utils/Network/AuthenticationAPI";
 
@@ -29,6 +29,7 @@ export const startSignIn = (username: string, password: string) : SignInAction =
 
 export const endSignIn = (authState: AuthenticationState) : SignInAction => {
     store.dispatch(changePage(Page.HOME))
+    store.dispatch(setMyProfile());
     return {
         type: "SIGN_IN",
         authState
@@ -66,6 +67,7 @@ export const startSignUp = (username: string, email: string, password: string): 
 export const endSignUp = (authState: AuthenticationState) : SignUpAction => {
     localStorage.setItem('token', authState.authToken);
     store.dispatch(changePage(Page.HOME))
+    store.dispatch(setMyProfile());
     return {
         type: "SIGN_UP",
         authState
@@ -84,6 +86,7 @@ export const signOut = (): SignOutAction => {
     authState.authToken = ""
     authState.tokenRefreshTimestamp = -1;
     store.dispatch(changePage(Page.DEFAULT))
+    store.dispatch(setMyProfile());
     return {
         type: "SIGN_OUT",
         authState

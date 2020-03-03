@@ -95,24 +95,20 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profileID := fmt.Sprintf("%s", claims["profileid"])
-	findFilter := bson.D{{"profileId", profileID}}
-	updateFilter := bson.M{"$push": bson.M{"tweets": req}}
-	var options options.UpdateOptions
-	var bb bool = true
-	options.Upsert = &bb
-	_, err = mongodb.Tweet.UpdateOne(context.TODO(), findFilter, updateFilter, &options)
+	// profileID := fmt.Sprintf("%s", claims["profileid"])
+	// findFilter := bson.D{{"profileId", profileID}}
+	// updateFilter := bson.M{"$push": bson.M{"tweets": req}}
+	// var options options.UpdateOptions
+	// var bb bool = true
+	// options.Upsert = &bb
+	// _, err = mongodb.Tweet.UpdateOne(context.TODO(), findFilter, updateFilter, &options)
+	req.ProfileId = fmt.Sprintf("%s", claims["profileid"])
+	_, err = mongodb.Tweet.InsertOne(context.TODO(), req)
 	if err != nil {
-		var db DatabaseModal
-		db.ProfileId = profileID
-		db.Tweets = append(db.Tweets, req)
-		_, err2 = mongodb.Tweet.InsertOne(context.TODO(), db)
-		if err2 != nil {
-			response.result = false
-			response.value = "Insertion failed, MongoDB unavailable at the moment"
-			http.Error(w, response.value, http.StatusInternalServerError)
-			return
-		}
+		response.result = false
+		response.value = "Insertion failed, MongoDB unavailable at the moment"
+		http.Error(w, response.value, http.StatusInternalServerError)
+		return
 	}
 
 	response.result = true
@@ -161,7 +157,7 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 		filter := bson.D{{"profileId", follower}}
 		cur, err := mongodb.Tweet.Find(context.TODO(), filter)
 		if err == nil {
-			var x DatabaseModal
+			var x Tweet
 			for cur.Next(context.TODO()) {
 				err := cur.Decode(&x)
 				if err != nil {
@@ -169,7 +165,7 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 				}
 
 				fmt.Printf("%s", x)
-				result = append(result, x.Tweets...)
+				result = append(result, x)
 			}
 		} else {
 			fmt.Println("Error found fetching tweets")
