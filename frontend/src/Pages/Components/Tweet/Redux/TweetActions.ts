@@ -1,15 +1,18 @@
 import { TweetState } from './TweetState';
-import { TweetPostAction, TweetDeleteAction, TweetEditAction, TweetRefreshAction } from "../../../../Utils/Redux/Actions";
+import { TweetPostAction, StartTweetRefreshAction, EndTweetRefreshAction } from "../../../../Utils/Redux/Actions";
 import { store } from "../../../../Utils/Redux/ConfigureStore";
 import { changePage } from "../../../../Utils/Redux/SystemActions";
 import { Page } from "../../../../Utils/Redux/SystemState";
 import { TweetAPI } from "../../../../Utils/Network/TweetAPI";
 
-export const startTweetRefresh = (profileId: string|null = null) : TweetRefreshAction => {
+export const startTweetRefresh = (profileId: string|null = null) : StartTweetRefreshAction => {
     let tweetApiController = new TweetAPI();
     let tweets: TweetState[] = [];
-    store.getState().Tweet = [];
-    tweetApiController.refresh()
+    let promise: Promise<any> = tweetApiController.refresh();
+    if(profileId != null) {
+        promise = tweetApiController.fetch(profileId);
+    }
+    promise
     .then((res) => {
         let body = res.body
         tweets = [];
@@ -26,17 +29,16 @@ export const startTweetRefresh = (profileId: string|null = null) : TweetRefreshA
         store.dispatch(endTweetRefresh(tweets));
     });
     return {
-        type: "TWEET_REFRESH",
+        type: "START_TWEET_REFRESH",
         tweet: tweets
-    } as TweetRefreshAction;
+    } as StartTweetRefreshAction;
 }
 
-export const endTweetRefresh = (tweets: TweetState[]) : TweetRefreshAction => {
-    store.getState().Tweet = tweets;
+export const endTweetRefresh = (tweets: TweetState[]) : EndTweetRefreshAction => {
     return {
-        type: "TWEET_REFRESH",
+        type: "END_TWEET_REFRESH",
         tweet: tweets
-    } as TweetRefreshAction
+    } as EndTweetRefreshAction
 }
 
 export const startTweetPost = (content: string, timestamp: number) : TweetPostAction => {

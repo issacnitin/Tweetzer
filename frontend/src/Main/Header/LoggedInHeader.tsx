@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from "react-bootstrap";
 import { store } from "../../Utils/Redux/ConfigureStore";
-import { changeToMyProfile, changePage } from "../../Utils/Redux/SystemActions";
+import { changeToMyProfile, changePage, changeToProfile } from "../../Utils/Redux/SystemActions";
 import { Page } from '../../Utils/Redux/SystemState';
 import { signOut } from "../../Pages/Components/Authentication/Redux/AuthenticationActions";
 
@@ -10,12 +10,15 @@ interface IProps {
 }
 
 interface IState {
-
+    searchtext: string
 }
 
 export default class LoggedInHeader extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
+        this.state = {
+            searchtext: ""
+        }
     }
 
     onClickHome = () => {
@@ -30,6 +33,16 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
         store.dispatch(signOut())
     }
 
+    onSearchButtonClick = () => {
+        store.dispatch(changeToProfile(this.state.searchtext))
+    }
+
+    handleChange = (e: any) => {
+        this.setState({
+            searchtext: e.target.value
+        })
+    }
+
     render() {
         return (
             <div>
@@ -42,8 +55,8 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
                         <Nav.Link onClick={this.onClickProfile} >Profile</Nav.Link>
                         </Nav>
                         <Form inline>
-                            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                            <Button variant="outline-success">Search</Button>
+                            <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={(e: any) => this.handleChange(e)} />
+                            <Button variant="outline-success" onClick={this.onSearchButtonClick}>Search</Button>
                             <Button variant="secondary" onClick={this.onSignoutClick}>Sign Out</Button>
                         </Form>
                     </Navbar.Collapse>

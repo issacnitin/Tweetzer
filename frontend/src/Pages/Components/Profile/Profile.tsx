@@ -9,12 +9,29 @@ interface IProps {
 }
 
 interface IState {
+    name: string;
+    username: string;
 }
 
 export default class Profile extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
+        this.state = {
+            name: this.props.modal.name,
+            username: this.props.modal.username
+        }
         store.dispatch(startTweetRefresh(this.props.modal.profileId))
+        store.subscribe(() => {
+            let state = store.getState().System;
+            console.error(!!state.profile ? state.profile.username : "")
+            console.error(this.state.username)
+            if(!!state.profile && (state.profile.name != this.state.name || state.profile.username != this.state.username)) {
+                this.setState({
+                    name: state.profile.name,
+                    username: state.profile.username
+                })
+            }
+        })
     }
 
     render() {

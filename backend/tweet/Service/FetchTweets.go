@@ -2,10 +2,10 @@ package tweet
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
+
+	"github.com/go-chi/chi"
 
 	"../../common/mongodb"
 	"github.com/go-chi/render"
@@ -13,19 +13,10 @@ import (
 )
 
 func FetchTweets(w http.ResponseWriter, r *http.Request) {
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
 	var req struct {
 		profileId string `json:"profileId" bson:"profileId"`
 	}
-	json.Unmarshal(b, &req)
-
+	req.profileId = chi.URLParam(r, "profileId")
 	var result []Tweet
 	filter := bson.D{{"profileId", req.profileId}}
 	cur, err := mongodb.Tweet.Find(context.TODO(), filter)
