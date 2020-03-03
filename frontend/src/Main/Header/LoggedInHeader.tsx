@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from "react-bootstrap";
 import { store } from "../../Utils/Redux/ConfigureStore";
-import { changePage } from "../../Utils/Redux/SystemActions";
+import { changeToMyProfile, changePage } from "../../Utils/Redux/SystemActions";
 import { Page } from '../../Utils/Redux/SystemState';
 import { signOut } from "../../Pages/Components/Authentication/Redux/AuthenticationActions";
 
@@ -23,7 +23,7 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onClickProfile = () => {
-        store.dispatch(changePage(Page.PROFILE))
+        store.dispatch(changeToMyProfile())
     }
 
     onSignoutClick = () => {

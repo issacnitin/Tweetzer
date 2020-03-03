@@ -5,9 +5,10 @@ import { changePage } from "../../../../Utils/Redux/SystemActions";
 import { Page } from "../../../../Utils/Redux/SystemState";
 import { TweetAPI } from "../../../../Utils/Network/TweetAPI";
 
-export const startTweetRefresh = () : TweetRefreshAction => {
+export const startTweetRefresh = (profileId: string|null = null) : TweetRefreshAction => {
     let tweetApiController = new TweetAPI();
-    let tweets = store.getState().Tweet;
+    let tweets: TweetState[] = [];
+    store.getState().Tweet = [];
     tweetApiController.refresh()
     .then((res) => {
         let body = res.body
@@ -32,7 +33,6 @@ export const startTweetRefresh = () : TweetRefreshAction => {
 
 export const endTweetRefresh = (tweets: TweetState[]) : TweetRefreshAction => {
     store.getState().Tweet = tweets;
-    store.dispatch(changePage(Page.HOME))
     return {
         type: "TWEET_REFRESH",
         tweet: tweets

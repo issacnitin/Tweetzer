@@ -1,4 +1,7 @@
 import React from "react";
+import { store } from "../../../Utils/Redux/ConfigureStore";
+import { changeToProfile } from "../../../Utils/Redux/SystemActions";
+import { Page } from "../../../Utils/Redux/SystemState";
 
 
 interface IProps {
@@ -17,6 +20,11 @@ export default class Tweet extends React.Component<IProps, IState> {
         super(props)
     }
 
+    onClickProfileId = (profileId: string) => {
+        console.log(profileId)
+        store.dispatch(changeToProfile(profileId));
+    }
+
     render() {
         return (
             <div style={{borderRadius: 10, background:'lightgrey', margin: 10}}>
@@ -24,7 +32,7 @@ export default class Tweet extends React.Component<IProps, IState> {
                 <br />
                 {this.props.timestamp}
                 <br />
-                {this.props.profileId}
+                <a href="#" onClick={(e) => this.onClickProfileId(this.props.profileId)}>{this.props.profileId}</a>
             </div>
         )
     }

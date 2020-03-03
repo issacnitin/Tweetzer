@@ -58,6 +58,7 @@ func Routes() *chi.Mux {
 
 		r.Get("/api/v1/tweet/search/{searchstring}", SearchTweet)
 		r.Get("/api/v1/tweet/feed", GetFeed)
+		r.Get("/api/v1/tweet/fetch", FetchTweets)
 		r.Post("/api/v1/tweet/post", PostTweet)
 	})
 
@@ -117,7 +118,6 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFeed(w http.ResponseWriter, r *http.Request) {
-
 	profileId, err := GetProfileIdFromClaims(r)
 	printError(err, w)
 	reqbody, err := json.Marshal(map[string]interface{}{

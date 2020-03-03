@@ -5,9 +5,15 @@ export enum Page {
     PROFILE,
     HOME
 }
+
+export interface ProfileModal {
+    profileId: string;
+    name: string;
+    username: string;
+}
   
 export interface SystemState {
     page: Page
-    profileid?: string
+    profile?: ProfileModal
     myid?: string
 }

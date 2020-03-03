@@ -2,7 +2,6 @@ import React from "react";
 import Tweet from './Tweet';
 import { TweetState } from "./Redux/TweetState";
 import { store } from "../../../Utils/Redux/ConfigureStore";
-import { startTweetRefresh } from "../Tweet/Redux/TweetActions";
 interface IProps {
     
 }

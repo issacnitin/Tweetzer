@@ -56,7 +56,7 @@ func Routes() *chi.Mux {
 
 		r.Get("/api/v1/profile/search/{searchstring}", SearchUser)
 		r.Get("/api/v1/profile/getme", GetMe)
-		r.Get("/api/v1/profile/get_profileid", GetProfileId)
+		r.Get("/api/v1/profile/getprofile/{profileId}", GetProfile)
 		r.Get("/api/v1/profile/getuserwithusername/{username}", GetUserWithUsername)
 	})
 
@@ -139,6 +139,27 @@ func GetMe(w http.ResponseWriter, r *http.Request) {
 
 	err := mongodb.Profile.FindOne(context.TODO(), filter).Decode(&result)
 	result.Password = ""
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusGone)
+	}
+
+	render.JSON(w, r, result)
+}
+
+func GetProfile(w http.ResponseWriter, r *http.Request) {
+	var req struct {
+		profileId string `json:"profileId" bson:"profileId"`
+	}
+	req.profileId = chi.URLParam(r, "profileId")
+	filter := bson.D{{"profileid", req.profileId}}
+
+	var result common.User
+
+	// TODO: Hide necessary things
+	err := mongodb.Profile.FindOne(context.TODO(), filter).Decode(&result)
+	result.Password = ""
+	result.Email = ""
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusGone)

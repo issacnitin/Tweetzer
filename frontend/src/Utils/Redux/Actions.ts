@@ -11,7 +11,7 @@ export const TWEET_POST = "TWEET_POST";
 export const TWEET_DELETE = "TWEET_DELETE";
 export const TWEET_EDIT = "TWEET_EDIT";
 export const TWEET_REFRESH = "TWEET_REFRESH";
-export const SET_PROFILE = "SET_PROFILE";
+export const CHANGE_PROFILE = "CHANGE_PROFILE";
 
 export interface SignInAction {
     type: typeof SIGN_IN;
@@ -33,8 +33,8 @@ export interface ChangePageAction {
     page: Page
 }
 
-export interface SetProfileAction {
-    type: typeof SET_PROFILE;
+export interface ChangeProfileAction {
+    type: typeof CHANGE_PROFILE;
     profileId: string
 }
 
@@ -59,6 +59,6 @@ export interface TweetRefreshAction {
 }
 
 export type AuthenticationActionTypes = SignInAction | SignOutAction | SignUpAction;
-export type SystemActionTypes = ChangePageAction | SetProfileAction;
+export type SystemActionTypes = ChangePageAction | ChangeProfileAction;
 export type TweetActionTypes = TweetPostAction | TweetDeleteAction | TweetEditAction | TweetRefreshAction;
 export type AppActions = AuthenticationActionTypes | SystemActionTypes | TweetActionTypes;
