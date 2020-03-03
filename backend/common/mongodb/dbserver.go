@@ -56,7 +56,7 @@ func healthChecks() {
 func createIndexes() {
 	mod := mongo.IndexModel{
 		Keys: bson.M{
-			"tweets": 1, // index in ascending order
+			"tweets.content": 1, // index in ascending order
 		}, Options: nil,
 	}
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)

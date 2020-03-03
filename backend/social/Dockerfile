@@ -10,8 +10,11 @@ ADD ./common /work/common
 
 WORKDIR /work/common
 RUN apt-get install wget
-RUN wget https://github.com/neo4j-drivers/seabolt/releases/download/v1.7.4/seabolt-1.7.4-Darwin.tar.gz
-RUN tar zxvf ~/Downloads/seabolt.tar.gz --strip-components=1 -C /
+RUN apt-get update
+RUN apt-get install -y libssl1.1
+RUN wget https://github.com/neo4j-drivers/seabolt/releases/download/v1.7.4/seabolt-1.7.4-Linux-ubuntu-18.04.deb
+RUN dpkg -i seabolt-1.7.4-Linux-ubuntu-18.04.deb
+RUN rm seabolt-1.7.4-Linux-ubuntu-18.04.deb
 WORKDIR /work/social
 RUN go get
 RUN go install

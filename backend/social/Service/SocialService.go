@@ -1,12 +1,13 @@
 package social
 
 import (
-	neo4j "../../common/neo4j"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	neo4j "../../common/neo4j"
 
 	"../../common"
 	mongodb "../../common/mongodb"
@@ -89,14 +90,15 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Some error", 500)
 	}
 
-	result, err := neo4j.Instance.Run("MERGE (p:Profile { id: $id1 }) 
-									   MERGE (q:Profile { id: $id2 })
-									   MERGE (p)-[r:FOLLOWING]->(q)<-[s:FOLLOWEDBY]-(p)
-									   RETURN p,q,r,s", map[string]interface{
-		"id1": profileId,
-		"id2": req.followId
-	})
-	
+	result, err := neo4j.Instance.Run(
+		`MERGE (p:Profile { id: $id1 })
+		MERGE (q:Profile { id: $id2 })
+		MERGE (p)-[r:FOLLOWING]->(q)<-[s:FOLLOWEDBY]-(p)
+		RETURN p,q,r,s`, map[string]string{
+			"id1": profileId,
+			"id2": req.followId,
+		})
+
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
@@ -126,16 +128,15 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Some error", 500)
 	}
-	result, err := neo4j.Instance.Run( 
-		"MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q:Profile { id: $id2 })
+	result, err := neo4j.Instance.Run(
+		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q:Profile { id: $id2 })
 		MATCH (s:Profile { id: $id2 })-[u:FOLLOWEDBY]->(t:Profile { id: $id1 })
-		DELETE r
-		DELETE u", 
-		map[string]interface{
+		DELETE r 
+		DELETE u`,
+		map[string]string{
 			"id1": profileId,
-			"id2": req.followId
-		}
-	)
+			"id2": req.followId,
+		})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
@@ -156,21 +157,20 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 
 	var followings []string
 	result, err := neo4j.Instance.Run(
-		"MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q)
-		RETURN q", 
-		map[string]interface{
-			"id1": profileId
-		}
-	)
+		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q) \
+		RETURN q`,
+		map[string]string{
+			"id1": profileId,
+		})
 
 	if err != nil {
 		http.Error(w, "Neo4j Query failed", http.StatusInternalServerError)
 	}
-	
+
 	for result.Next() {
 		followings = append(followings, result.Record().GetByIndex(1).(string))
 	}
-	
+
 	render.JSON(w, r, followings)
 }
 
