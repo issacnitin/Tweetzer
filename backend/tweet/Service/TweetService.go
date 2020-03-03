@@ -110,6 +110,50 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, response)
 }
 
+func GetFeed(w http.ResponseWriter, r *http.Request) {
+
+	profileId, err := GetProfileIdFromClaims(r)
+	printError(err, w)
+	reqbody, err := json.Marshal(map[string]string{
+		"profileId": profileId,
+	})
+	printError(err, w)
+
+	client := http.Client{
+		Timeout: 20000,
+	}
+	request, err := http.NewRequest("POST", "http://social/api/v1/social/getfollowers", bytes.NewBuffer(reqbody))
+	request.Header.Set("Content-type", "application/json")
+	printError(err, w)
+
+	resp, err := client.Do(request)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+
+	printError(err, w)
+	var followers []string
+	json.Unmarshal(body, &followers)
+
+	var result []Tweet
+	for follower := range followers {
+		filter := bson.D{{"profileId", follower}}
+		cur, err := mongodb.Tweet.Find(context.TODO(), filter)
+		printError(err, w)
+		var x Tweet
+		for cur.Next(context.TODO()) {
+			err := cur.Decode(&x)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			fmt.Printf("%s", x)
+			result = append(result, x)
+		}
+	}
+
+	render.JSON(w, r, result)
+}
+
 func SearchTweet(w http.ResponseWriter, r *http.Request) {
 
 	b, err := ioutil.ReadAll(r.Body)
@@ -145,50 +189,6 @@ func SearchTweet(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Printf("%s", x)
 		result = append(result, x)
-	}
-
-	render.JSON(w, r, result)
-}
-
-func GetFeed(w http.ResponseWriter, r *http.Request) {
-
-	profileId, err := GetProfileIdFromClaims(r)
-	printError(err, w)
-	reqbody, err := json.Marshal(map[string]string{
-		"profileId": profileId,
-	})
-	printError(err, w)
-
-	client := http.Client{
-		Timeout: 20000,
-	}
-	request, err := http.NewRequest("POST", "http://localhost:8081/api/v1/social/getfollowers", bytes.NewBuffer(reqbody))
-	request.Header.Set("Content-type", "application/json")
-	printError(err, w)
-
-	resp, err := client.Do(request)
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-
-	printError(err, w)
-	var followers []string
-	json.Unmarshal(body, &followers)
-
-	var result []Tweet
-	for follower := range followers {
-		filter := bson.D{{"profileId", follower}}
-		cur, err := mongodb.Tweet.Find(context.TODO(), filter)
-		printError(err, w)
-		var x Tweet
-		for cur.Next(context.TODO()) {
-			err := cur.Decode(&x)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-			}
-
-			fmt.Printf("%s", x)
-			result = append(result, x)
-		}
 	}
 
 	render.JSON(w, r, result)

@@ -26,7 +26,7 @@ services:
     depends_on:
     - "mongo"
     - "redis"
-    - "neo4j"
+    - "neo4jdb"
   redis:
     image: redis:latest
     ports:
@@ -50,7 +50,7 @@ services:
       - $HOME/mongod:/data/db
     logging:
       driver: "none"
-  neo4j:
+  neo4jdb:
     image: neo4j:latest
     ports:
       - "7474:7474"

@@ -3,9 +3,11 @@ package mongodb
 import (
 	"context"
 	"fmt"
+	"reflect"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql" //Importing mysql connector for golang
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -34,6 +36,7 @@ func openDB() {
 	Profile = Instance.Database("tweetzer").Collection("profile")
 	Social = Instance.Database("tweetzer").Collection("social")
 	Tweet = Instance.Database("tweetzer").Collection("tweet")
+	createIndexes()
 }
 
 func init() {
@@ -48,4 +51,20 @@ func healthChecks() {
 		}
 		time.Sleep(10 * time.Second)
 	}
+}
+
+func createIndexes() {
+	mod := mongo.IndexModel{
+		Keys: bson.M{
+			"tweets": 1, // index in ascending order
+		}, Options: nil,
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
+	ind, err := Tweet.Indexes().CreateOne(ctx, mod, nil)
+	if err != nil {
+		fmt.Println("Error creating index")
+		return
+	}
+	fmt.Println("CreateOne() index:", ind)
+	fmt.Println("CreateOne() type:", reflect.TypeOf(ind), "\n")
 }

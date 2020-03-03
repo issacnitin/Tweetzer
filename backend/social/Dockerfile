@@ -8,6 +8,10 @@ ENV GOBIN=/work/social/bin
 ADD ./social /work/social
 ADD ./common /work/common
 
+WORKDIR /work/common
+RUN apt-get install wget
+RUN wget https://github.com/neo4j-drivers/seabolt/releases/download/v1.7.4/seabolt-1.7.4-Darwin.tar.gz
+RUN tar zxvf ~/Downloads/seabolt.tar.gz --strip-components=1 -C /
 WORKDIR /work/social
 RUN go get
 RUN go install

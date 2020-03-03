@@ -1,6 +1,7 @@
 package social
 
 import (
+	neo4j "../../common/neo4j"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -88,33 +89,16 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Some error", 500)
 	}
 
-	// TODO: Handle concurrency issues
-	var rr DatabaseModal
-
-	filter := bson.D{{"profileId", req.followId}}
-	err = mongodb.Social.FindOne(context.TODO(), filter).Decode(&rr)
+	result, err := neo4j.Instance.Run("MERGE (p:Profile { id: $id1 }) 
+									   MERGE (q:Profile { id: $id2 })
+									   MERGE (p)-[r:FOLLOWING]->(q)<-[s:FOLLOWEDBY]-(p)
+									   RETURN p,q,r,s", map[string]interface{
+		"id1": profileId,
+		"id2": req.followId
+	})
+	
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-	}
-	rr.followedby = append(rr.followedby, profileId)
-	// Non atomic operation, TODO
-	_, err = mongodb.Social.InsertOne(context.TODO(), req)
-	if err != nil {
-		http.Error(w, "Insertion Failed, MongoDB unavailable at the moment", 500)
-		return
-	}
-
-	filter = bson.D{{"profileId", profileId}}
-	err = mongodb.Social.FindOne(context.TODO(), filter).Decode(&rr)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-	rr.following = append(rr.following, profileId)
-	// Non atomic operation, TODO
-	_, err = mongodb.Social.InsertOne(context.TODO(), req)
-	if err != nil {
-		http.Error(w, "Insertion Failed, MongoDB unavailable at the moment", 500)
-		return
 	}
 
 	render.JSON(w, r, "Success")
@@ -142,52 +126,24 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Some error", 500)
 	}
-
-	// TODO: Handle concurrency issues
-	var rr DatabaseModal
-
-	filter := bson.D{{"profileId", req.followId}}
-	err = mongodb.Social.FindOne(context.TODO(), filter).Decode(&rr)
+	result, err := neo4j.Instance.Run( 
+		"MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q:Profile { id: $id2 })
+		MATCH (s:Profile { id: $id2 })-[u:FOLLOWEDBY]->(t:Profile { id: $id1 })
+		DELETE r
+		DELETE u", 
+		map[string]interface{
+			"id1": profileId,
+			"id2": req.followId
+		}
+	)
 	if err != nil {
 		http.Error(w, err.Error(), 500)
-	}
-	for i, v := range rr.followedby {
-		if v == profileId {
-			rr.followedby = append(rr.following[:i], rr.following[i+1:]...)
-			break
-		}
-	}
-
-	// Non atomic operation, TODO
-	_, err = mongodb.Social.InsertOne(context.TODO(), req)
-	if err != nil {
-		http.Error(w, "Insertion Failed, MongoDB unavailable at the moment", 500)
-		return
-	}
-
-	filter = bson.D{{"profileId", profileId}}
-	err = mongodb.Social.FindOne(context.TODO(), filter).Decode(&rr)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-	for i, v := range rr.followedby {
-		if v == profileId {
-			rr.following = append(rr.following[:i], rr.following[i+1:]...)
-			break
-		}
-	}
-
-	// Non atomic operation, TODO
-	_, err = mongodb.Social.InsertOne(context.TODO(), req)
-	if err != nil {
-		http.Error(w, "Insertion Failed, MongoDB unavailable at the moment", 500)
-		return
 	}
 
 	render.JSON(w, r, "Success")
 }
 
-func GetFollowers(w http.ResponseWriter, r *http.Request) {
+func GetFollowing(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		profileId string `json:"profileId"`
 	}
@@ -198,17 +154,27 @@ func GetFollowers(w http.ResponseWriter, r *http.Request) {
 
 	profileId := req.profileId
 
-	var rr DatabaseModal
-	filter := bson.D{{"profileId", profileId}}
-	err = mongodb.Social.FindOne(context.TODO(), filter).Decode(&rr)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
+	var followings []string
+	result, err := neo4j.Instance.Run(
+		"MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q)
+		RETURN q", 
+		map[string]interface{
+			"id1": profileId
+		}
+	)
 
-	render.JSON(w, r, rr.followedby)
+	if err != nil {
+		http.Error(w, "Neo4j Query failed", http.StatusInternalServerError)
+	}
+	
+	for result.Next() {
+		followings = append(followings, result.Record().GetByIndex(1).(string))
+	}
+	
+	render.JSON(w, r, followings)
 }
 
-func GetFollowing(w http.ResponseWriter, r *http.Request) {
+func GetFollowers(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		profileId string `json:"profileId"`
 	}

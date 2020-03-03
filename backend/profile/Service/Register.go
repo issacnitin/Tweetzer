@@ -58,8 +58,6 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	fmt.Printf("%s", token)
-
 	var response common.Token
 	response.Token = token
 	render.JSON(w, r, response)
