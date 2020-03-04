@@ -9,6 +9,7 @@ import Login from '../Pages/Components/Authentication/Login';
 import Register from '../Pages/Components/Authentication/Register';
 import Profile from '../Pages/Components/Profile/Profile';
 import Home from '../Pages/Home/Home';
+import Search from '../Pages/Home/Search';
 import { startSignIn } from "../Pages/Components/Authentication/Redux/AuthenticationActions";
 
 interface IProps {
@@ -67,7 +68,10 @@ class App extends React.Component<IProps, IState> {
         jsx = <Home />
         break;
       case Page.PROFILE:
-        jsx = !!this.state.profile ? <Profile modal={this.state.profile}/> : <div/>
+        jsx = <Profile />
+        break;
+      case Page.SEARCH:
+        jsx = <Search />
         break;
       default:
         jsx = <div />

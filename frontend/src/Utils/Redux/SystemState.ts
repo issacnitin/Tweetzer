@@ -3,7 +3,8 @@ export enum Page {
     LOGIN,
     SIGNUP,
     PROFILE,
-    HOME
+    HOME,
+    SEARCH
 }
 
 export interface ProfileModal {
@@ -16,4 +17,5 @@ export interface SystemState {
     page: Page
     profile?: ProfileModal
     myid?: string
+    profileIdLoaded?: string
 }

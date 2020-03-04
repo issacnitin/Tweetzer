@@ -20,6 +20,7 @@ export default class FollowButton extends React.Component<IProps, IState> {
         }
         store.subscribe(() => {
             let state = store.getState().Social.following
+            console.log(state)
             this.setState({
                 following: state.indexOf(this.props.profileId) > -1
             })

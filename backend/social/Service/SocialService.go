@@ -54,7 +54,7 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Post("/api/v1/social/follow", Follow)
+		r.Get("/api/v1/social/follow/{followid}", Follow)
 		r.Post("/api/v1/social/unfollow", UnFollow)
 	})
 

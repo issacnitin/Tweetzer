@@ -20,4 +20,4 @@ RUN go get
 RUN go install
 CMD ./bin/social
 
-EXPOSE 8082/tcp
+EXPOSE 8083/tcp

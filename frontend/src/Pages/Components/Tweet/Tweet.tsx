@@ -1,6 +1,6 @@
 import React from "react";
 import { store } from "../../../Utils/Redux/ConfigureStore";
-import { changeToProfile } from "../../../Utils/Redux/SystemActions";
+import { startLoadProfile, changePage } from "../../../Utils/Redux/SystemActions";
 import { Page } from "../../../Utils/Redux/SystemState";
 
 
@@ -21,7 +21,8 @@ export default class Tweet extends React.Component<IProps, IState> {
     }
 
     onClickProfileId = (profileId: string) => {
-        store.dispatch(changeToProfile(profileId));
+        store.getState().System.profileIdLoaded = profileId
+        store.dispatch(changePage(Page.PROFILE));
     }
 
     render() {

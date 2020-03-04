@@ -13,14 +13,12 @@ interface IState {
 export default class Feed extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
-        
         this.state = {
             tweets: store.getState().Tweet
         }
 
         store.subscribe(() => {
             let tweets = store.getState().Tweet;
-            console.log(tweets)
             tweets.sort((a, b) => b.timestamp - a.timestamp)
             this.setState({
                 tweets: tweets
@@ -30,7 +28,7 @@ export default class Feed extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div>
+            <div style={{width:'100%'}}>
             {
                 this.state.tweets.map((el, index) => (
                     <div>

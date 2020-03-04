@@ -1,35 +1,8 @@
 import { TweetState } from './TweetState';
 import { TweetPostAction, StartTweetRefreshAction, EndTweetRefreshAction, StartSearchTweetAction } from "../../../../Utils/Redux/Actions";
 import { store } from "../../../../Utils/Redux/ConfigureStore";
-import { changePage } from "../../../../Utils/Redux/SystemActions";
-import { Page } from "../../../../Utils/Redux/SystemState";
 import { TweetAPI } from "../../../../Utils/Network/TweetAPI";
 
-
-export const startTweetSearch = (text: string) : StartSearchTweetAction => {
-    let tweetApiController = new TweetAPI();
-    let tweets: TweetState[] = [];
-    tweetApiController.search(text)
-    .then((res) => {
-        let body = res.body
-        tweets = [];
-        for(let tweet of body) {
-            let t : TweetState = {} as TweetState;
-            t.content = tweet["content"]
-            t.timestamp = tweet["timestamp"]
-            t.profileId = tweet["profileId"]
-            tweets.push(t)
-        }
-        store.dispatch(endTweetRefresh(tweets));
-    })
-    .catch((err) => {
-        store.dispatch(endTweetRefresh(tweets));
-    });
-    return {
-        type: "START_TWEET_SEARCH",
-        tweet: tweets
-    } as StartSearchTweetAction; 
-}
 export const startTweetRefresh = (profileId: string|null = null) : StartTweetRefreshAction => {
     let tweetApiController = new TweetAPI();
     let tweets: TweetState[] = [];
@@ -57,6 +30,31 @@ export const startTweetRefresh = (profileId: string|null = null) : StartTweetRef
         type: "START_TWEET_REFRESH",
         tweet: tweets
     } as StartTweetRefreshAction;
+}
+
+export const startTweetSearch = (text: string) : StartSearchTweetAction => {
+    let tweetApiController = new TweetAPI();
+    let tweets: TweetState[] = [];
+    tweetApiController.search(text)
+    .then((res) => {
+        let body = res.body
+        tweets = [];
+        for(let tweet of body) {
+            let t : TweetState = {} as TweetState;
+            t.content = tweet["content"]
+            t.timestamp = tweet["timestamp"]
+            t.profileId = tweet["profileId"]
+            tweets.push(t)
+        }
+        store.dispatch(endTweetRefresh(tweets));
+    })
+    .catch((err) => {
+        store.dispatch(endTweetRefresh(tweets));
+    });
+    return {
+        type: "START_TWEET_SEARCH",
+        tweet: tweets
+    } as StartSearchTweetAction; 
 }
 
 export const endTweetRefresh = (tweets: TweetState[]) : EndTweetRefreshAction => {

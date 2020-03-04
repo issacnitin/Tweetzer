@@ -1,5 +1,5 @@
 import { AuthenticationState } from "../../Pages/Components/Authentication/Redux/AuthenticationState";
-import { Page } from "./SystemState";
+import { Page, ProfileModal } from "./SystemState";
 import { TweetState } from "../../Pages/Components/Tweet/Redux/TweetState";
 import { endTweetRefresh } from "../../Pages/Components/Tweet/Redux/TweetActions";
 import { SocialState } from "../../Pages/Components/Profile/Redux/SocialState";
@@ -14,8 +14,9 @@ export const TWEET_EDIT = "TWEET_EDIT";
 export const START_TWEET_REFRESH = "START_TWEET_REFRESH";
 export const START_TWEET_SEARCH = "START_TWEET_SEARCH";
 export const END_TWEET_REFRESH = "END_TWEET_REFRESH";
-export const CHANGE_PROFILE = "CHANGE_PROFILE";
-
+export const START_LOAD_PROFILE = "START_LOAD_PROFILE";
+export const END_LOAD_PROFILE = "END_LOAD_PROFILE";
+export const SET_MY_PROFILE_ID = "SET_MY_PROFILE_ID";
 
 export interface SignInAction {
     type: typeof SIGN_IN;
@@ -37,9 +38,19 @@ export interface ChangePageAction {
     page: Page
 }
 
-export interface ChangeProfileAction {
-    type: typeof CHANGE_PROFILE;
-    profileId: string
+export interface StartChangeProfileAction {
+    type: typeof START_LOAD_PROFILE;
+    profile: ProfileModal
+}
+
+export interface EndChangeProfileAction {
+    type: typeof END_LOAD_PROFILE;
+    profile: ProfileModal
+}
+
+export interface SetMyProfileIdAction {
+    type: typeof SET_MY_PROFILE_ID;
+    profileId: string;
 }
 
 export interface TweetPostAction {
@@ -72,7 +83,7 @@ export interface EndTweetRefreshAction {
 }
 
 export type AuthenticationActionTypes = SignInAction | SignOutAction | SignUpAction;
-export type SystemActionTypes = ChangePageAction | ChangeProfileAction;
+export type SystemActionTypes = ChangePageAction | StartChangeProfileAction | EndChangeProfileAction | SetMyProfileIdAction;
 export type TweetActionTypes =  TweetPostAction 
                                 | TweetDeleteAction 
                                 | TweetEditAction 

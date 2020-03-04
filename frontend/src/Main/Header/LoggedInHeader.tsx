@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown, Form, FormControl, Button } from "react-bootstrap";
 import { store } from "../../Utils/Redux/ConfigureStore";
-import { changeToMyProfile, changePage, changeToProfile } from "../../Utils/Redux/SystemActions";
+import { changePage, startLoadProfile } from "../../Utils/Redux/SystemActions";
 import { Page } from '../../Utils/Redux/SystemState';
 import { signOut } from "../../Pages/Components/Authentication/Redux/AuthenticationActions";
 import { startTweetSearch, startTweetRefresh } from "../../Pages/Components/Tweet/Redux/TweetActions";
@@ -28,7 +28,8 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onClickProfile = () => {
-        store.dispatch(changeToMyProfile())
+        store.getState().System.profileIdLoaded = store.getState().System.myid
+        store.dispatch(changePage(Page.PROFILE))
     }
 
     onSignoutClick = () => {
@@ -36,8 +37,8 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onSearchButtonClick = () => {
+        store.dispatch(changePage(Page.SEARCH))
         store.dispatch(startTweetSearch(this.state.searchtext))
-        store.dispatch(changePage(Page.HOME))
     }
 
     handleChange = (e: any) => {

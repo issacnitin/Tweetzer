@@ -12,11 +12,11 @@ const tweetReducer = (state = tweetReducerDefaultState, action: TweetActionTypes
         case "TWEET_DELETE":
             return state;
         case "START_TWEET_REFRESH":
-            return Object.assign([], state, []);
+            return [];
         case "START_TWEET_SEARCH":
-            return Object.assign([], state, []);
+            return [];
         case "END_TWEET_REFRESH":
-            return Object.assign([], [], action.tweet)
+            return Object.assign([], action.tweet)
         default:
             return state;
     }

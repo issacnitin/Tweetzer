@@ -6,7 +6,7 @@ export default class SocialAPI extends BaseAPI {
     }
 
     async follow(id: string) {
-        let response = await this.sendRequestAuthorized("/api/v1/social/follow", "POST", {"follow": id});
+        let response = await this.sendRequestAuthorized("/api/v1/social/follow/" + id, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,

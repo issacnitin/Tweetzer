@@ -95,6 +95,35 @@ export const endFollowFail = (): EndFollowAction => {
 export const updateSocialState = () => {
     
 }
+export const startGetFollowing = () : StartGetFollowingAction => {
+    let socialController = new SocialAPI();
+    socialController.getFollowing()
+    .then((res) => {
+        store.dispatch(endGetFollowingSuccess(res.body as string[]))
+    })
+    .catch((err) => {
+        store.dispatch(endGetFollowingFail())
+    })
+
+    return {
+        type: "START_GET_FOLLOWING",
+        following: []
+    }
+}
+
+export const endGetFollowingSuccess = (following: string[]) : EndGetFollowingAction => {
+    return {
+        type: "END_GET_FOLLOWING",
+        following: following
+    }
+}
+
+export const endGetFollowingFail = () : EndGetFollowingAction => {
+    return {
+        type: "END_GET_FOLLOWING",
+        following: []
+    }
+}
 
 export const startGetFollowers = () : StartGetFollowersAction => {
     let socialController = new SocialAPI();

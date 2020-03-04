@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 
+	"github.com/go-chi/chi"
+
 	neo4j "../../common/neo4j"
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
@@ -21,27 +23,17 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	profileId := fmt.Sprintf("%s", claims["profileid"])
+	var followid = chi.URLParam(r, "followid")
 
-	var req struct {
-		followId string `json:"follow"`
-	}
-
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	json.Unmarshal(b, &req)
-
-	if err != nil {
-		http.Error(w, "Some error", 500)
-	}
-
+	fmt.Println(profileId + " following " + followid)
 	neo4jSession := neo4j.GetSessionWithReadWrite()
-	_, err = neo4jSession.Run(
+	_, err := neo4jSession.Run(
 		`MERGE (p:Profile { id: $id1 })
 		MERGE (q:Profile { id: $id2 })
-		MERGE (p)-[r:FOLLOWING]->(q)<-[s:FOLLOWEDBY]-(p)
+		MERGE (p)-[r:FOLLOWING]->(q)-[s:FOLLOWEDBY]->(p)
 		RETURN p,q,r,s`, map[string]interface{}{
 			"id1": profileId,
-			"id2": req.followId,
+			"id2": followid,
 		})
 
 	if err != nil {
@@ -63,6 +55,13 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 	json.Unmarshal(b, &req)
 
 	profileId := req.profileId
+	if profileId == "" {
+		_, claims, err2 := jwtauth.FromContext(r.Context())
+		if err2 != nil {
+			http.Error(w, err2.Error(), http.StatusInternalServerError)
+		}
+		profileId = fmt.Sprintf("%s", claims["profileid"])
+	}
 
 	var followings []string
 	neo4jSession := neo4j.GetSessionWithReadWrite()
