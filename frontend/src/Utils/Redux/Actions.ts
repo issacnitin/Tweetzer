@@ -2,6 +2,7 @@ import { AuthenticationState } from "../../Pages/Components/Authentication/Redux
 import { Page } from "./SystemState";
 import { TweetState } from "../../Pages/Components/Tweet/Redux/TweetState";
 import { endTweetRefresh } from "../../Pages/Components/Tweet/Redux/TweetActions";
+import { SocialState } from "../../Pages/Components/Profile/Redux/SocialState";
 
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_OUT = "SIGN_OUT";
@@ -14,6 +15,7 @@ export const START_TWEET_REFRESH = "START_TWEET_REFRESH";
 export const START_TWEET_SEARCH = "START_TWEET_SEARCH";
 export const END_TWEET_REFRESH = "END_TWEET_REFRESH";
 export const CHANGE_PROFILE = "CHANGE_PROFILE";
+
 
 export interface SignInAction {
     type: typeof SIGN_IN;
