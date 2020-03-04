@@ -42,7 +42,7 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFollowing(w http.ResponseWriter, r *http.Request) {
-	var profileId string = chi.URLParam(r, "profileId")
+	profileId := chi.URLParam(r, "profileId")
 	var followings = []string{}
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	result, err := neo4jSession.Run(
@@ -53,7 +53,7 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 		})
 
 	if err != nil {
-		http.Error(w, "Neo4j Query failed", http.StatusInternalServerError)
+		http.Error(w, "Neo4j Query failed, "+err.Error(), http.StatusInternalServerError)
 	} else {
 		for result.Next() {
 			values := result.Record().Values()
