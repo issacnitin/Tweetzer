@@ -54,19 +54,22 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	json.Unmarshal(b, &req)
 
-	profileId := req.profileId
-	if profileId == "" {
+	var profileId string = ""
+	if len(req.profileId) == 0 {
 		_, claims, err2 := jwtauth.FromContext(r.Context())
 		if err2 != nil {
 			http.Error(w, err2.Error(), http.StatusInternalServerError)
 		}
 		profileId = fmt.Sprintf("%s", claims["profileid"])
+	} else {
+		profileId = req.profileId
 	}
 
-	var followings []string
+	fmt.Println(profileId)
+	var followings = []string{}
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	result, err := neo4jSession.Run(
-		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q) \
+		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q)
 		RETURN q`,
 		map[string]interface{}{
 			"id1": profileId,
@@ -75,6 +78,7 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Neo4j Query failed", http.StatusInternalServerError)
 	} else {
+		fmt.Println("%s", result)
 		for result.Next() {
 			followings = append(followings, result.Record().GetByIndex(1).(string))
 		}

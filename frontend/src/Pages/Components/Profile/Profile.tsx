@@ -2,7 +2,7 @@ import React from "react"
 import { store } from "../../../Utils/Redux/ConfigureStore"
 import Feed from "../Tweet/Feed";
 import { startTweetRefresh } from "../Tweet/Redux/TweetActions";
-import { ProfileModal } from "../../../Utils/Redux/SystemState";
+import { Constants } from "../../../Utils/Constants";
 import FollowButton from "./FollowButton";
 import { startLoadProfile } from "../../../Utils/Redux/SystemActions";
 
@@ -20,13 +20,14 @@ interface IState {
 export default class Profile extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
-        let profileId = store.getState().System.profileIdLoaded
+        let profileId = Constants.profileId
         this.state = {
             profileId: "",
             name: "",
             username: "",
             mine: false
         }
+        
         if(!!profileId) {
             store.dispatch(startLoadProfile(profileId))
         }

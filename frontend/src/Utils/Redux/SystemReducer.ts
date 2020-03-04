@@ -1,5 +1,5 @@
 import { SystemState, Page } from "./SystemState";
-import { SystemActionTypes } from "./Actions";
+import { SystemActionTypes } from "./SystemActions";
 
 const systemReducerDefaultState: SystemState = {
     page: 0
@@ -22,6 +22,14 @@ const systemReducer = (state = systemReducerDefaultState, action: SystemActionTy
             let s3 = Object.assign({}, state)
             s3.myid = action.profileId
             return s3
+        case "START_SEARCH_PROFILE":
+            let s4 = Object.assign({}, state)
+            s4.searchProfiles = []
+            return s4;
+        case "END_SEARCH_PROFILE":
+            let s5 = Object.assign({}, state)
+            s5.searchProfiles = action.profiles;
+            return s5
         default:
             return state;
     }

@@ -17,5 +17,5 @@ export interface SystemState {
     page: Page
     profile?: ProfileModal
     myid?: string
-    profileIdLoaded?: string
+    searchProfiles?: ProfileModal[]
 }

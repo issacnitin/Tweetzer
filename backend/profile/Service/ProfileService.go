@@ -15,8 +15,6 @@ import (
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -164,43 +162,6 @@ func GetProfile(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusGone)
-	}
-
-	render.JSON(w, r, result)
-}
-
-// Untested
-func SearchUser(w http.ResponseWriter, r *http.Request) {
-
-	fmt.Sprintf("FindUser called")
-	ss := fmt.Sprintf("%s", chi.URLParam(r, "searchstring"))
-	ss = fmt.Sprintf(".*%s.*", ss)
-
-	filter := bson.D{
-		{"$or", bson.D{
-			{"name", primitive.Regex{ss, ""}},
-			{"country", ss},
-			{"phone", ss},
-		}}}
-	findOptions := options.Find()
-
-	var result []common.User
-
-	cur, err := mongodb.Profile.Find(context.TODO(), filter, findOptions)
-
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-
-	var x common.User
-	for cur.Next(context.TODO()) {
-		err := cur.Decode(&x)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-
-		fmt.Printf("%s", x)
-		result = append(result, x)
 	}
 
 	render.JSON(w, r, result)

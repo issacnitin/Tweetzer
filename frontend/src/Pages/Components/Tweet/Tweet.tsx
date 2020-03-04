@@ -2,6 +2,7 @@ import React from "react";
 import { store } from "../../../Utils/Redux/ConfigureStore";
 import { startLoadProfile, changePage } from "../../../Utils/Redux/SystemActions";
 import { Page } from "../../../Utils/Redux/SystemState";
+import { Constants } from "../../../Utils/Constants";
 
 
 interface IProps {
@@ -21,7 +22,7 @@ export default class Tweet extends React.Component<IProps, IState> {
     }
 
     onClickProfileId = (profileId: string) => {
-        store.getState().System.profileIdLoaded = profileId
+        Constants.profileId = profileId
         store.dispatch(changePage(Page.PROFILE));
     }
 
