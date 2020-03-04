@@ -11,6 +11,7 @@ export const TWEET_POST = "TWEET_POST";
 export const TWEET_DELETE = "TWEET_DELETE";
 export const TWEET_EDIT = "TWEET_EDIT";
 export const START_TWEET_REFRESH = "START_TWEET_REFRESH";
+export const START_TWEET_SEARCH = "START_TWEET_SEARCH";
 export const END_TWEET_REFRESH = "END_TWEET_REFRESH";
 export const CHANGE_PROFILE = "CHANGE_PROFILE";
 
@@ -59,6 +60,10 @@ export interface StartTweetRefreshAction {
     tweet: TweetState[];
 }
 
+export interface StartSearchTweetAction {
+    type: typeof START_TWEET_SEARCH;
+    tweet: TweetState[]
+}
 export interface EndTweetRefreshAction {
     type: typeof END_TWEET_REFRESH;
     tweet: TweetState[];
@@ -66,5 +71,10 @@ export interface EndTweetRefreshAction {
 
 export type AuthenticationActionTypes = SignInAction | SignOutAction | SignUpAction;
 export type SystemActionTypes = ChangePageAction | ChangeProfileAction;
-export type TweetActionTypes = TweetPostAction | TweetDeleteAction | TweetEditAction | StartTweetRefreshAction | EndTweetRefreshAction;
+export type TweetActionTypes =  TweetPostAction 
+                                | TweetDeleteAction 
+                                | TweetEditAction 
+                                | StartTweetRefreshAction 
+                                | EndTweetRefreshAction
+                                | StartSearchTweetAction;
 export type AppActions = AuthenticationActionTypes | SystemActionTypes | TweetActionTypes;

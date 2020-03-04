@@ -15,7 +15,6 @@ export const changeToProfile = (profileId: string) :  ChangeProfileAction => {
     let identityController: IdentityAPI = new IdentityAPI();
     identityController.getProfile(profileId)
     .then((res) => {
-        console.log(res)
         let profileId = res.body["profileid"];
         let state = store.getState().System;
         state.profile = {} as ProfileModal;

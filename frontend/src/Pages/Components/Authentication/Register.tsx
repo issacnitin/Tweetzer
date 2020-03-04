@@ -2,36 +2,43 @@ import React from "react"
 import { Button, InputGroup, FormControl, Modal } from 'react-bootstrap'
 import { store } from "../../../Utils/Redux/ConfigureStore"
 import { startSignUp, signOut } from "./Redux/AuthenticationActions";
+import IdentityAPI from "../../../Utils/Network/IdentityAPI";
 
 interface IProps {
 
 }
 
 interface IState {
+    name: string;
     username: string;
     email: string;
     password: string;
     confirmpassword: string;
     formValid: boolean;
+    validUsername: boolean;
 }
 
 export default class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
         this.state = {
+            name: "",
             username: "",
             email: "",
             password: "",
             confirmpassword: "",
-            formValid: true
+            formValid: true,
+            validUsername: true
         }
     }
 
     onRegisterClick = () => {
-        this.validateForm();
-        if(this.state.formValid) {
-            store.dispatch(startSignUp(this.state.username, this.state.email, this.state.password));
-        }
+        this.validateForm()
+        .then((res: boolean) => {
+            if(res) {
+                store.dispatch(startSignUp(this.state.name, this.state.username, this.state.email, this.state.password));
+            }
+        })
     }
 
     onCloseClick = () => {
@@ -59,35 +66,61 @@ export default class Login extends React.Component<IProps, IState> {
                     confirmpassword: e.target.value
                 });
                 break;
+            case "name":
+                this.setState({
+                    name: e.target.value
+                });
             default:
                 break;
         }
     }
 
-    validateForm() {
-        if(this.state.password.length == 0 || this.state.confirmpassword.length == 0 || this.state.username.length == 0 || this.state.email.length == 0) {
+    validateUsername = (e: any) => {
+        let identityController = new IdentityAPI();
+        identityController.checkUsername(e.target.value)
+        .then((res) => {
             this.setState({
-                formValid: false
-            });
-            return;
-        }
-        if(this.state.password != this.state.confirmpassword) {
-            this.setState({
-                formValid: false
-            });
-            return;
-        }
-        let indexOfAt = this.state.email.indexOf('@');
-        let indexOfDot = this.state.email.lastIndexOf('.');
-        if(indexOfAt != -1 && indexOfDot != -1 && indexOfAt >= indexOfDot) {
-            this.setState({
-                formValid: false
+                validUsername: res.body["result"]
             })
-            return;
-        }
-        this.setState({
-            formValid: true
-        });
+        })
+        .catch((err) => {
+            this.setState({
+                validUsername: false
+            })
+        })
+    }
+
+    validateForm() {
+        return new Promise<any>((resolve) => {
+
+            if(this.state.password.length == 0 || this.state.confirmpassword.length == 0 || this.state.username.length == 0 || this.state.email.length == 0) {
+                this.setState({
+                    formValid: false
+                });
+                resolve(false)
+                return;
+            }
+            if(this.state.password != this.state.confirmpassword) {
+                this.setState({
+                    formValid: false
+                });
+                resolve(false)
+                return;
+            }
+            let indexOfAt = this.state.email.indexOf('@');
+            let indexOfDot = this.state.email.lastIndexOf('.');
+            if(indexOfAt != -1 && indexOfDot != -1 && indexOfAt >= indexOfDot) {
+                this.setState({
+                    formValid: false
+                })
+                resolve(false)
+                return;
+            }
+            this.setState({
+                formValid: true
+            });
+            resolve(true)
+        })
     }
 
     render() {
@@ -134,6 +167,7 @@ export default class Login extends React.Component<IProps, IState> {
                             <InputGroup.Text id="basic-addon1">Name</InputGroup.Text>
                             </InputGroup.Prepend>
                             <FormControl
+                            name="name"
                             placeholder="First and Last Name"
                             aria-label="First and Last Name"
                             aria-describedby="basic-addon1"
@@ -157,6 +191,7 @@ export default class Login extends React.Component<IProps, IState> {
                             </InputGroup.Prepend>
                             <FormControl
                                 name="password"
+                                type="password"
                                 placeholder=""
                                 aria-label=""
                                 aria-describedby="basic-addon1"
@@ -169,6 +204,7 @@ export default class Login extends React.Component<IProps, IState> {
                             </InputGroup.Prepend>
                             <FormControl
                                 name="confirmpassword"
+                                type="password"
                                 placeholder=""
                                 aria-label=""
                                 aria-describedby="basic-addon1"

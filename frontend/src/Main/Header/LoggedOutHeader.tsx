@@ -37,8 +37,8 @@ export default class LoggedOutHeader extends React.Component<IProps, IState> {
                         <Nav.Link href="#home">Home</Nav.Link>
                         </Nav>
                         <Form inline>
-                            <Button variant="primary" onClick={this.onLoginClick}>Login</Button>
-                            <Button variant="secondary" onClick={this.onRegisterClick}>Register</Button>
+                            <Button variant="primary" onClick={this.onLoginClick} style={{margin: 10}}>Login</Button>
+                            <Button variant="secondary" onClick={this.onRegisterClick} style={{margin: 10}}>Register</Button>
                         </Form>
                     </Navbar.Collapse>
                 </Navbar>

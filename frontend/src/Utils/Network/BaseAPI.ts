@@ -11,9 +11,6 @@ export default class BaseAPI {
     }
 
     sendRequest = (url: string, method: string = "GET", body?: any) : Promise<any> => {
-        console.log(this.baseURL)
-        console.log(url)
-        console.log(method)
         return fetch(this.baseURL + (url[0] != "/" ? "/" : "") + url, {
             method: method,
             mode: 'cors',
@@ -36,7 +33,6 @@ export default class BaseAPI {
 
     sendRequestAuthorized = (url: string, method: string = "GET", body?: any) : Promise<any> => {
         let authToken = store.getState().Authentication.authToken;
-        console.log(authToken)
         return fetch(this.baseURL + (url[0] != "/" ? "/" : "") + url, {
             method: method,
             mode: 'cors',

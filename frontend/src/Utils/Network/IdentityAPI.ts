@@ -22,4 +22,13 @@ export default class IdentityAPI extends BaseAPI {
             statusCode: response.status
         }
     }
+
+    async checkUsername(username: string) {
+        let response = await this.sendRequestAuthorized("/api/v1/profile/checkusername/" + username, "GET")
+        let responseBody = await response.json();
+        return {
+            body: responseBody,
+            statusCode: response.status
+        }
+    }
 }

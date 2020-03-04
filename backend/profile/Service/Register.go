@@ -47,8 +47,8 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	redis.Instance.Set(req.Username, true, 999999999999)
-
+	redisStatus := redis.Instance.Set(req.Username, true, 999999999999)
+	fmt.Println("%s", redisStatus)
 	claims := jwt.MapClaims{
 		"profileid": req.ProfileId,
 	}

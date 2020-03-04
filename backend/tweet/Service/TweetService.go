@@ -59,6 +59,7 @@ func Routes() *chi.Mux {
 		r.Get("/api/v1/tweet/search/{searchstring}", SearchTweet)
 		r.Get("/api/v1/tweet/feed", GetFeed)
 		r.Get("/api/v1/tweet/fetch/{profileId}", FetchTweets)
+		r.Get("/api/v1/tweet/search/{searchtext}", SearchTweets)
 		r.Post("/api/v1/tweet/post", PostTweet)
 	})
 

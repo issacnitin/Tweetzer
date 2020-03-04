@@ -42,9 +42,9 @@ export const endSignInWithFail = (authState: AuthenticationState): SignInAction 
     } as SignInAction
 }
 
-export const startSignUp = (username: string, email: string, password: string): SignUpAction => {
+export const startSignUp = (name: string, username: string, email: string, password: string): SignUpAction => {
     let authState: AuthenticationState = store.getState().Authentication;
-    authAPIController.signUp(username, email, password)
+    authAPIController.signUp(name, username, email, password)
     .then((res) => {
         let body = res.body
         authState.authToken = !!body ? body.token : "";
@@ -54,7 +54,7 @@ export const startSignUp = (username: string, email: string, password: string): 
         store.dispatch(endSignUp(authState))
     })
     .catch((err) => {
-        console.log(err)
+        console.error(err)
         store.dispatch(endSignUpFail(authState, err));
     });
     return {
@@ -83,6 +83,8 @@ export const signOut = (): SignOutAction => {
     let authState: AuthenticationState = store.getState().Authentication;
     authState.authToken = ""
     authState.tokenRefreshTimestamp = -1;
+    localStorage.removeItem('username');
+    localStorage.removeItem('password');
     store.dispatch(changePage(Page.DEFAULT))
     return {
         type: "SIGN_OUT",

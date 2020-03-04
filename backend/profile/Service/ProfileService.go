@@ -64,6 +64,7 @@ func Routes() *chi.Mux {
 	router.Group(func(r chi.Router) {
 		r.Post("/api/v1/profile/register", RegisterUser)
 		r.Post("/api/v1/profile/login", LoginUser)
+		r.Get("/api/v1/profile/checkusername/{username}", UsernameExist)
 	})
 
 	return router
@@ -93,7 +94,7 @@ func UsernameExist(w http.ResponseWriter, r *http.Request) {
 	_, err := redis.Instance.Get(ss).Result()
 
 	var response struct {
-		Result bool `json:"Result"`
+		Result bool `json:"result"`
 	}
 	response.Result = err != nil
 	render.JSON(w, r, response)

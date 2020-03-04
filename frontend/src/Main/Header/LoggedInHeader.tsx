@@ -4,6 +4,7 @@ import { store } from "../../Utils/Redux/ConfigureStore";
 import { changeToMyProfile, changePage, changeToProfile } from "../../Utils/Redux/SystemActions";
 import { Page } from '../../Utils/Redux/SystemState';
 import { signOut } from "../../Pages/Components/Authentication/Redux/AuthenticationActions";
+import { startTweetSearch } from "../../Pages/Components/Tweet/Redux/TweetActions";
 
 interface IProps {
 
@@ -34,7 +35,8 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onSearchButtonClick = () => {
-        store.dispatch(changeToProfile(this.state.searchtext))
+        store.dispatch(startTweetSearch(this.state.searchtext))
+        store.dispatch(changePage(Page.HOME))
     }
 
     handleChange = (e: any) => {
@@ -56,8 +58,8 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
                         </Nav>
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={(e: any) => this.handleChange(e)} />
-                            <Button variant="outline-success" onClick={this.onSearchButtonClick}>Search</Button>
-                            <Button variant="secondary" onClick={this.onSignoutClick}>Sign Out</Button>
+                            <Button variant="outline-success" style={{margin: 10}} onClick={this.onSearchButtonClick}>Search</Button>
+                            <Button variant="secondary" style={{margin: 10}} onClick={this.onSignoutClick}>Sign Out</Button>
                         </Form>
                     </Navbar.Collapse>
                 </Navbar>

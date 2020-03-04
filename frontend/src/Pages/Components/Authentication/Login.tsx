@@ -25,7 +25,6 @@ class Login extends React.Component<IProps, IState> {
 
         store.subscribe(() => {
             let signInStatus = store.getState().Authentication.authToken == "";
-            console.log(signInStatus);
             this.setState({
                 signInFailed: signInStatus
             });
@@ -84,6 +83,7 @@ class Login extends React.Component<IProps, IState> {
                             </InputGroup.Prepend>
                             <FormControl
                             name="password"
+                            type="password"
                             placeholder=""
                             aria-label=""
                             aria-describedby="basic-addon1"

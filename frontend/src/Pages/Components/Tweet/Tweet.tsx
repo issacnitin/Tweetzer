@@ -21,7 +21,6 @@ export default class Tweet extends React.Component<IProps, IState> {
     }
 
     onClickProfileId = (profileId: string) => {
-        console.log(profileId)
         store.dispatch(changeToProfile(profileId));
     }
 

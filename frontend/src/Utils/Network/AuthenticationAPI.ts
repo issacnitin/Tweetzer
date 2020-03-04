@@ -14,8 +14,8 @@ class AuthenticationAPI extends BaseAPI {
         }
     }
 
-    async signUp(username: string, email: string, password: string) {
-        let response = await this.sendRequest("/api/v1/profile/register", "POST", { "username": username, "email": email, "password": password})
+    async signUp(name: string, username: string, email: string, password: string) {
+        let response = await this.sendRequest("/api/v1/profile/register", "POST", { "name": name, "username": username, "email": email, "password": password})
         let responseBody = await response.json();
         return {
             body: responseBody,
