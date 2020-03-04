@@ -4,7 +4,7 @@ import { store } from "../../Utils/Redux/ConfigureStore";
 import { changeToMyProfile, changePage, changeToProfile } from "../../Utils/Redux/SystemActions";
 import { Page } from '../../Utils/Redux/SystemState';
 import { signOut } from "../../Pages/Components/Authentication/Redux/AuthenticationActions";
-import { startTweetSearch } from "../../Pages/Components/Tweet/Redux/TweetActions";
+import { startTweetSearch, startTweetRefresh } from "../../Pages/Components/Tweet/Redux/TweetActions";
 
 interface IProps {
 
@@ -23,6 +23,7 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onClickHome = () => {
+        store.dispatch(startTweetRefresh())
         store.dispatch(changePage(Page.HOME))
     }
 
