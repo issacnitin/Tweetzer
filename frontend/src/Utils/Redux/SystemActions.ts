@@ -3,6 +3,7 @@ import { store } from './ConfigureStore';
 import IdentityAPI from "../Network/IdentityAPI";
 import { startTweetRefresh } from '../../Pages/Components/Tweet/Redux/TweetActions';
 import { Constants } from '../Constants';
+import { startGetFollowers, startGetFollowing } from '../../Pages/Components/Profile/Redux/SocialActions';
 
 export const START_LOAD_PROFILE = "START_LOAD_PROFILE";
 export const END_LOAD_PROFILE = "END_LOAD_PROFILE";
@@ -85,12 +86,15 @@ export const endLoadProfile = (profile: ProfileModal) : EndChangeProfileAction =
     }
 }
 
-export const startSetMyProfileId = () : SetMyProfileIdAction => {
+export const startFetchMyDetails = () : SetMyProfileIdAction => {
     let identityController: IdentityAPI = new IdentityAPI();
     identityController.getMyProfile()
     .then((res) => {
         if(!!res && !!res.body) {
             store.dispatch(endSetMyProfileId(res.body["profileid"]))
+            store.dispatch(startLoadProfile(res.body["profileid"]))
+            //store.dispatch(startGetFollowers(res.body["profileid"]))
+            store.dispatch(startGetFollowing(res.body["profileid"]))
         }
     })
     .catch((err) => {

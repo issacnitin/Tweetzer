@@ -95,9 +95,9 @@ export const endFollowFail = (): EndFollowAction => {
 export const updateSocialState = () => {
     
 }
-export const startGetFollowing = () : StartGetFollowingAction => {
+export const startGetFollowing = (profileId: string) : StartGetFollowingAction => {
     let socialController = new SocialAPI();
-    socialController.getFollowing()
+    socialController.getFollowing(profileId)
     .then((res) => {
         store.dispatch(endGetFollowingSuccess(res.body as string[]))
     })

@@ -1,9 +1,7 @@
 package social
 
 import (
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/go-chi/chi"
@@ -44,28 +42,7 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFollowing(w http.ResponseWriter, r *http.Request) {
-	var req struct {
-		profileId string `json:"profileId"`
-	}
-	b, err := ioutil.ReadAll(r.Body)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	defer r.Body.Close()
-	json.Unmarshal(b, &req)
-
-	var profileId string = ""
-	if len(req.profileId) == 0 {
-		_, claims, err2 := jwtauth.FromContext(r.Context())
-		if err2 != nil {
-			http.Error(w, err2.Error(), http.StatusInternalServerError)
-		}
-		profileId = fmt.Sprintf("%s", claims["profileid"])
-	} else {
-		profileId = req.profileId
-	}
-
-	fmt.Println(profileId)
+	var profileId string = chi.URLParam(r, "profileId")
 	var followings = []string{}
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	result, err := neo4jSession.Run(
@@ -78,9 +55,11 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Neo4j Query failed", http.StatusInternalServerError)
 	} else {
-		fmt.Println("%s", result)
 		for result.Next() {
-			followings = append(followings, result.Record().GetByIndex(1).(string))
+			values := result.Record().Values()
+			for _, v := range values {
+				followings = append(followings, v.(neo4j.Node).Props()["id"].(string))
+			}
 		}
 		render.JSON(w, r, followings)
 	}

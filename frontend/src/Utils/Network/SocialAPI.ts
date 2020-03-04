@@ -32,8 +32,8 @@ export default class SocialAPI extends BaseAPI {
         }
     }
 
-    async getFollowing() {
-        let response = await this.sendRequestAuthorized("/api/v1/social/getfollowing", "GET");
+    async getFollowing(profileId: string) {
+        let response = await this.sendRequestAuthorized("/api/v1/social/getfollowing/" + profileId, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,

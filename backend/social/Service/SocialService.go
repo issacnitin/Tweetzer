@@ -61,7 +61,7 @@ func Routes() *chi.Mux {
 	// Public routes
 	router.Group(func(r chi.Router) {
 		r.Get("/api/v1/social/getfollowers", GetFollowers)
-		r.Get("/api/v1/social/getfollowing", GetFollowing)
+		r.Get("/api/v1/social/getfollowing/{profileId}", GetFollowing)
 	})
 
 	return router

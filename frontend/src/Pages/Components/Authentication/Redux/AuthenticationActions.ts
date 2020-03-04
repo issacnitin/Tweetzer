@@ -1,7 +1,7 @@
 import { AuthenticationState } from "./AuthenticationState"
 import { SignInAction, SignOutAction, SignUpAction } from "../../../../Utils/Redux/Actions";
 import { AppState, store } from "../../../../Utils/Redux/ConfigureStore";
-import { changePage, startSetMyProfileId } from "../../../../Utils/Redux/SystemActions";
+import { changePage, startFetchMyDetails } from "../../../../Utils/Redux/SystemActions";
 import { Page } from "../../../../Utils/Redux/SystemState";
 import AuthenticationAPI from "../../../../Utils/Network/AuthenticationAPI";
 import { startGetFollowing } from "../../Profile/Redux/SocialActions";
@@ -18,7 +18,7 @@ export const startSignIn = (username: string, password: string) : SignInAction =
         localStorage.setItem('username', username);
         localStorage.setItem('password', password);
         store.dispatch(endSignIn(authState))
-        store.dispatch(startSetMyProfileId())
+        store.dispatch(startFetchMyDetails())
     })
     .catch((err) => {
         store.dispatch(endSignInWithFail(authState));
@@ -30,7 +30,6 @@ export const startSignIn = (username: string, password: string) : SignInAction =
 }
 
 export const endSignIn = (authState: AuthenticationState) : SignInAction => {
-    store.dispatch(startGetFollowing())
     store.dispatch(changePage(Page.HOME))
     return {
         type: "SIGN_IN",
@@ -55,7 +54,7 @@ export const startSignUp = (name: string, username: string, email: string, passw
         localStorage.setItem('username', username ? username : email);
         localStorage.setItem('password', password);
         store.dispatch(endSignUp(authState))
-        store.dispatch(startSetMyProfileId())
+        store.dispatch(startFetchMyDetails())
     })
     .catch((err) => {
         console.error(err)
@@ -69,7 +68,6 @@ export const startSignUp = (name: string, username: string, email: string, passw
 
 export const endSignUp = (authState: AuthenticationState) : SignUpAction => {
     localStorage.setItem('token', authState.authToken);
-    store.dispatch(startGetFollowing())
     store.dispatch(changePage(Page.HOME))
     return {
         type: "SIGN_UP",

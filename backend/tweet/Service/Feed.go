@@ -26,7 +26,7 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 	if len(token) == 0 {
 		http.Error(w, "Failed to get token from request header", http.StatusInternalServerError)
 	}
-	req, err := http.NewRequest("GET", "http://social:8083/api/v1/social/getfollowing", bytes.NewBuffer(reqbody))
+	req, err := http.NewRequest("GET", "http://social:8083/api/v1/social/getfollowing/"+profileId, bytes.NewBuffer(reqbody))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
