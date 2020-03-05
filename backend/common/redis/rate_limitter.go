@@ -17,6 +17,7 @@ func RateLimit(limit int) func(http.Handler) http.Handler {
 			}
 			if !res.Allowed {
 				http.Error(w, err.Error(), http.StatusTooManyRequests)
+				return
 			}
 			next.ServeHTTP(w, r)
 		}
