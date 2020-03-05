@@ -9,7 +9,7 @@ import (
 type Node neo4j.Node
 
 func GetSessionWithReadWrite() neo4j.Session {
-	driver, err := neo4j.NewDriver("bolt://neo4jdb:7687", neo4j.BasicAuth("neo4j", "neo4j", ""))
+	driver, err := neo4j.NewDriver("bolt://neo4jdb:7687", neo4j.BasicAuth("neo4j", "password", ""))
 	if err != nil {
 		fmt.Printf("%s", err)
 		return nil
