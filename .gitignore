@@ -6,3 +6,4 @@ backend/tweet/src
 .vscode/
 backend/profile/.devcontainer
 backend/src/
+temp/

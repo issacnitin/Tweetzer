@@ -67,7 +67,7 @@ services:
       - APP_MONGO_PASS=SomePassword1234
       - APP_MONGO_DB=tweetzer
     volumes:
-      - $HOME/mongod:/data/db
+      - ../temp/mongod:/data/db
     logging:
       driver: "json-file"
   neo4jdb:
@@ -76,11 +76,11 @@ services:
       - "7474:7474"
       - "7687:7687"
     volumes:
-      - $HOME/neo4j/data:/data
-      - $HOME/neo4j/logs:/logs
-      - $HOME/neo4j/import:/var/lib/neo4j/import
-      - $HOME/neo4j/plugins:/plugins
+      - ../temp/neo4j/data:/data
+      - ../temp/neo4j/logs:/logs
+      - ../temp/neo4j/import:/var/lib/neo4j/import
+      - ../temp/neo4j/plugins:/plugins
     environment:
-      - NEO4J_AUTH=neo4j/password
+      - NEO4J_AUTH=neo4j/pass
     logging:
       driver: "json-file"
