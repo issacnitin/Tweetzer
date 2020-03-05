@@ -1,5 +1,5 @@
 export interface TweetState {
-    profileId: string
+    username: string
     content: string
     timestamp: number
 }

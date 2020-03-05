@@ -11,7 +11,6 @@ interface IProps {
 }
 
 interface IState {
-    profileId: string;
     name: string;
     username: string;
     mine: boolean;
@@ -20,26 +19,24 @@ interface IState {
 export default class Profile extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
-        let profileId = Constants.profileId
+        let username = Constants.username
         this.state = {
-            profileId: "",
             name: "",
             username: "",
             mine: false
         }
         
-        if(!!profileId) {
-            store.dispatch(startLoadProfile(profileId))
+        if(!!username) {
+            store.dispatch(startLoadProfile(username))
         }
-        store.dispatch(startTweetRefresh(profileId))
+        store.dispatch(startTweetRefresh(username))
         store.subscribe(() => {
             let state = store.getState().System;
             if(!!state.profile) {
                 this.setState({
                     name: state.profile.name,
                     username: state.profile.username,
-                    mine: state.profile.profileId == state.myid,
-                    profileId: state.profile.profileId
+                    mine: state.profile.username == state.myusername
                 })
             }
         })
@@ -54,7 +51,7 @@ export default class Profile extends React.Component<IProps, IState> {
                 </div>
                 {
                     !this.state.mine ? 
-                    <FollowButton profileId={this.state.profileId}/>
+                    <FollowButton username={this.state.username}/>
                     :
                     <div />
                 }

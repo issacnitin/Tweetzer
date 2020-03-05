@@ -1,11 +1,11 @@
 package social
 
 type FollowModal struct {
-	profileid string `json:"profileid"`
+	username string `json:"username"`
 }
 
 type DatabaseModal struct {
-	profileId  string   `json:"profileId"`
+	username   string   `json:"username"`
 	followedby []string `json:"followedby"`
 	following  []string `json:"following"`
 }

@@ -8,7 +8,6 @@ export enum Page {
 }
 
 export interface ProfileModal {
-    profileId: string;
     name: string;
     username: string;
 }
@@ -16,6 +15,6 @@ export interface ProfileModal {
 export interface SystemState {
     page: Page
     profile?: ProfileModal
-    myid?: string
+    myusername?: string
     searchProfiles?: ProfileModal[]
 }

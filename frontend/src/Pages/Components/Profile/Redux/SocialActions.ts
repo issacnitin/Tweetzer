@@ -60,12 +60,12 @@ export type SocialActionTypes = StartFollowAction
 | StartGetFollowingAction 
 | EndGetFollowingAction;
 
-export const startFollow = (profileId: string) : StartFollowAction => {
+export const startFollow = (username: string) : StartFollowAction => {
     let socialController = new SocialAPI();
-    socialController.follow(profileId)
+    socialController.follow(username)
     .then((res) => {
         if(!!res.body) {
-            store.dispatch(endFollowSuccess(profileId))
+            store.dispatch(endFollowSuccess(username))
         }
     })
     .catch((err) => {
@@ -95,9 +95,9 @@ export const endFollowFail = (): EndFollowAction => {
 export const updateSocialState = () => {
     
 }
-export const startGetFollowing = (profileId: string) : StartGetFollowingAction => {
+export const startGetFollowing = (username: string) : StartGetFollowingAction => {
     let socialController = new SocialAPI();
-    socialController.getFollowing(profileId)
+    socialController.getFollowing(username)
     .then((res) => {
         store.dispatch(endGetFollowingSuccess(res.body as string[]))
     })

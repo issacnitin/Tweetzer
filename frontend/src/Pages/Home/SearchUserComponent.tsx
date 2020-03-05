@@ -8,7 +8,6 @@ import { Constants } from '../../Utils/Constants';
 interface IProps {
     name: string;
     username: string;
-    profileId: string;
 }
 
 interface IState {
@@ -21,8 +20,7 @@ export default class SearchUserComponent extends React.Component<IProps, IState>
     }
 
     onProfileClick = () => {
-        console.log(this.props.profileId)
-        Constants.profileId = this.props.profileId
+        Constants.username = this.props.username
         store.dispatch(changePage(Page.PROFILE))
     }
 

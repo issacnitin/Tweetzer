@@ -29,7 +29,7 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onClickProfile = () => {
-        Constants.profileId = store.getState().System.myid
+        Constants.username = store.getState().System.myusername
         store.dispatch(changePage(Page.PROFILE))
     }
 

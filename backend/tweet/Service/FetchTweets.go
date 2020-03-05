@@ -14,11 +14,11 @@ import (
 
 func FetchTweets(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		profileId string `json:"profileId" bson:"profileId"`
+		username string `json:"username" bson:"username"`
 	}
-	req.profileId = chi.URLParam(r, "profileId")
+	req.username = chi.URLParam(r, "username")
 	var result []Tweet
-	filter := bson.D{{"profileId", req.profileId}}
+	filter := bson.D{{"username", req.username}}
 	cur, err := mongodb.Tweet.Find(context.TODO(), filter)
 	if err == nil {
 		var x Tweet

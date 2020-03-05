@@ -84,7 +84,7 @@ func createIndexes() {
 
 	mod = mongo.IndexModel{
 		Keys: bson.M{
-			"profileid": 1, // index in ascending order
+			"username": 1, // index in ascending order
 		}, Options: nil,
 	}
 	ind, err = Profile.Indexes().CreateOne(ctx, mod, nil)

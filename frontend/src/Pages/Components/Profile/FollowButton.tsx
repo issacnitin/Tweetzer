@@ -4,7 +4,7 @@ import { store } from "../../../Utils/Redux/ConfigureStore";
 import { startFollow } from "./Redux/SocialActions";
 
 interface IProps {
-    profileId: string
+    username: string
 }
 
 interface IState {
@@ -16,23 +16,23 @@ export default class FollowButton extends React.Component<IProps, IState> {
         super(props)
         let state = store.getState().Social
         this.state = {
-            following: state.following.indexOf(this.props.profileId) > -1
+            following: state.following.indexOf(this.props.username) > -1
         }
         store.subscribe(() => {
             let state = store.getState().Social.following
             console.log(state)
             this.setState({
-                following: state.indexOf(this.props.profileId) > -1
+                following: state.indexOf(this.props.username) > -1
             })
         })
     }
 
     onFollowButtonClick = () => {
-        store.dispatch(startFollow(this.props.profileId))
+        store.dispatch(startFollow(this.props.username))
     }
     
     onUnfollowButtonClick = () => {
-        // store.dispatch(startUnfollow(this.props.profileId))
+        // store.dispatch(startUnfollow(this.props.username))
     }
 
     render() {

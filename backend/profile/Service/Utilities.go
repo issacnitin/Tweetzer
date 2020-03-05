@@ -8,13 +8,8 @@ import (
 	"../../common"
 	"../../common/mongodb"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
-
-func GenerateProfileId() string {
-	return primitive.NewObjectID().Hex()
-}
 
 var maxNum = 100
 
@@ -33,7 +28,7 @@ func _GenerateUsername() string {
 	return UsernameList[rand.Intn(88)] + fmt.Sprintf("%d", rand.Intn(maxNum))
 }
 
-func GetEmailFromProfileId() string {
+func GetEmailFromUsername() string {
 	return "stub"
 }
 
@@ -44,7 +39,6 @@ func _RegisterUser(req common.User) (common.User, *mongo.InsertOneResult, error)
 	result.Email = req.Email
 	result.Name = req.Name
 	result.Phone = req.Phone
-	result.ProfileId = GenerateProfileId()
 	// BIG TODO: Hash Password
 	// TODO: Assuming single email, that need not be the case, user can have multiple emails linked to same account
 	// For example, registration with a non google email and trying to register later with a google email

@@ -32,7 +32,6 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req.ProfileId = GenerateProfileId()
 	if req.Username == "" {
 		req.Username = _GenerateUsername()
 	}
@@ -50,7 +49,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 	redisStatus := redis.Instance.Set(req.Username, true, 999999999999)
 	fmt.Println("%s", redisStatus)
 	claims := jwt.MapClaims{
-		"profileid": req.ProfileId,
+		"username": req.Username,
 	}
 
 	_, token, err := tokenAuth.Encode(claims)

@@ -54,7 +54,7 @@ func Routes() *chi.Mux {
 
 		r.Get("/api/v1/profile/search/{searchstring}", SearchUser)
 		r.Get("/api/v1/profile/getme", GetMe)
-		r.Get("/api/v1/profile/getprofile/{profileId}", GetProfile)
+		r.Get("/api/v1/profile/getprofile/{username}", GetProfile)
 		r.Get("/api/v1/profile/getuserwithusername/{username}", GetUserWithUsername)
 	})
 
@@ -68,7 +68,7 @@ func Routes() *chi.Mux {
 	return router
 }
 
-func GetProfileId(w http.ResponseWriter, r *http.Request) {
+func GetUsername(w http.ResponseWriter, r *http.Request) {
 	_, claims, err2 := jwtauth.FromContext(r.Context())
 
 	if err2 != nil {
@@ -77,12 +77,12 @@ func GetProfileId(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profileId := fmt.Sprintf("%s", claims["profileid"])
+	username := fmt.Sprintf("%s", claims["username"])
 
 	var response struct {
-		ProfileId string `json:"profileId"`
+		Username string `json:"username"`
 	}
-	response.ProfileId = profileId
+	response.Username = username
 
 	render.JSON(w, r, response)
 }
@@ -131,8 +131,8 @@ func GetMe(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profileId := claims["profileid"]
-	filter := bson.D{{"profileid", profileId}}
+	username := claims["username"]
+	filter := bson.D{{"username", username}}
 
 	var result common.User
 
@@ -148,10 +148,10 @@ func GetMe(w http.ResponseWriter, r *http.Request) {
 
 func GetProfile(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		profileId string `json:"profileId" bson:"profileId"`
+		username string `json:"username" bson:"username"`
 	}
-	req.profileId = chi.URLParam(r, "profileId")
-	filter := bson.D{{"profileid", req.profileId}}
+	req.username = chi.URLParam(r, "username")
+	filter := bson.D{{"username", req.username}}
 
 	var result common.User
 

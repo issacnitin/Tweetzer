@@ -20,7 +20,7 @@ const systemReducer = (state = systemReducerDefaultState, action: SystemActionTy
             return s2
         case "SET_MY_PROFILE_ID":
             let s3 = Object.assign({}, state)
-            s3.myid = action.profileId
+            s3.myusername = action.username
             return s3
         case "START_SEARCH_PROFILE":
             let s4 = Object.assign({}, state)

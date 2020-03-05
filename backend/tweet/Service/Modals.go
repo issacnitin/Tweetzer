@@ -1,7 +1,7 @@
 package tweet
 
 type Tweet struct {
-	ProfileId string `json:"profileId" bson:"profileId"`
+	Username  string `json:"username" bson:"username"`
 	Content   string `json:"content" bson:"content"`
 	Timestamp int64  `json:"timestamp" bson:"timestamp"`
 }

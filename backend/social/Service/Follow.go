@@ -20,18 +20,18 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profileId := fmt.Sprintf("%s", claims["profileid"])
-	var followid = chi.URLParam(r, "followid")
+	username := fmt.Sprintf("%s", claims["username"])
+	var followusername = chi.URLParam(r, "followusername")
 
-	fmt.Println(profileId + " following " + followid)
+	fmt.Println(username + " following " + followusername)
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	_, err := neo4jSession.Run(
-		`MERGE (p:Profile { id: $id1 })
-		MERGE (q:Profile { id: $id2 })
+		`MERGE (p:Profile { username: $username1 })
+		MERGE (q:Profile { username: $username2 })
 		MERGE (p)-[r:FOLLOWING]->(q)-[s:FOLLOWEDBY]->(p)
 		RETURN p,q,r,s`, map[string]interface{}{
-			"id1": profileId,
-			"id2": followid,
+			"username1": username,
+			"username2": followusername,
 		})
 
 	if err != nil {
@@ -42,14 +42,14 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFollowing(w http.ResponseWriter, r *http.Request) {
-	profileId := chi.URLParam(r, "profileId")
+	username := chi.URLParam(r, "username")
 	var followings = []string{}
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	result, err := neo4jSession.Run(
 		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q)
 		RETURN q`,
 		map[string]interface{}{
-			"id1": profileId,
+			"id1": username,
 		})
 
 	if err != nil {

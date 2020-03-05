@@ -27,9 +27,9 @@ export interface EndChangeProfileAction {
     profile: ProfileModal
 }
 
-export interface SetMyProfileIdAction {
+export interface SetMyUsernameAction {
     type: typeof SET_MY_PROFILE_ID;
-    profileId: string;
+    username: string;
 }
 
 export interface StartSearchProfileAction {
@@ -44,7 +44,7 @@ export interface EndSearchProfileAction {
 export type SystemActionTypes = ChangePageAction 
 | StartChangeProfileAction 
 | EndChangeProfileAction 
-| SetMyProfileIdAction 
+| SetMyUsernameAction 
 | StartSearchProfileAction 
 | EndSearchProfileAction;
 
@@ -55,19 +55,16 @@ export const changePage = (page: Page): ChangePageAction => {
     }
 }
 
-export const startLoadProfile = (profileId: string) :  StartChangeProfileAction => {
-    Constants.profileId = profileId
+export const startLoadProfile = (username: string) :  StartChangeProfileAction => {
+    Constants.username = username
     let identityController: IdentityAPI = new IdentityAPI();
-    identityController.getProfile(profileId)
+    identityController.getProfile(username)
     .then((res) => {
-        let profileId = res.body["profileid"];
         let profile = {} as ProfileModal;
         profile.name = res.body["name"];
         profile.username = res.body["username"];
-        profile.profileId = profileId;
-        Constants.profileId = profileId
+        Constants.username = username
         store.dispatch(endLoadProfile(profile))
-        store.dispatch(startTweetRefresh(profileId))
     })
     .catch((err) => {
         let state = store.getState().System;
@@ -86,15 +83,15 @@ export const endLoadProfile = (profile: ProfileModal) : EndChangeProfileAction =
     }
 }
 
-export const startFetchMyDetails = () : SetMyProfileIdAction => {
+export const startFetchMyDetails = () : SetMyUsernameAction => {
     let identityController: IdentityAPI = new IdentityAPI();
     identityController.getMyProfile()
     .then((res) => {
         if(!!res && !!res.body) {
-            store.dispatch(endSetMyProfileId(res.body["profileid"]))
-            store.dispatch(startLoadProfile(res.body["profileid"]))
-            //store.dispatch(startGetFollowers(res.body["profileid"]))
-            store.dispatch(startGetFollowing(res.body["profileid"]))
+            store.dispatch(endSetMyUsername(res.body["username"]))
+            store.dispatch(startLoadProfile(res.body["username"]))
+            //store.dispatch(startGetFollowers(res.body["username"]))
+            store.dispatch(startGetFollowing(res.body["username"]))
         }
     })
     .catch((err) => {
@@ -102,14 +99,14 @@ export const startFetchMyDetails = () : SetMyProfileIdAction => {
     })
     return {
         type: "SET_MY_PROFILE_ID",
-        profileId: ""
+        username: ""
     }
 }
 
-export const endSetMyProfileId = (profileId: string) : SetMyProfileIdAction => {
+export const endSetMyUsername = (username: string) : SetMyUsernameAction => {
     return {
         type: "SET_MY_PROFILE_ID",
-        profileId: profileId
+        username: username
     }
 }
 
@@ -123,7 +120,6 @@ export const startSearchProfile = (text: string) : StartSearchProfileAction => {
             let m : ProfileModal = {} as ProfileModal;
             m.name = profile["name"]
             m.username = profile["username"]
-            m.profileId = profile["profileid"]
             modals.push(m)
         }
         store.dispatch(endSearchProfile(modals))

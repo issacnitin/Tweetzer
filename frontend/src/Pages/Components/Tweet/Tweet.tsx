@@ -3,12 +3,12 @@ import { store } from "../../../Utils/Redux/ConfigureStore";
 import { startLoadProfile, changePage } from "../../../Utils/Redux/SystemActions";
 import { Page } from "../../../Utils/Redux/SystemState";
 import { Constants } from "../../../Utils/Constants";
-
+import "./Tweet.css"
 
 interface IProps {
     content: string
     timestamp: number
-    profileId: string
+    username: string
 }
 
 interface IState {
@@ -21,19 +21,21 @@ export default class Tweet extends React.Component<IProps, IState> {
         super(props)
     }
 
-    onClickProfileId = (profileId: string) => {
-        Constants.profileId = profileId
+    onClickUsername = (username: string) => {
+        Constants.username = username
         store.dispatch(changePage(Page.PROFILE));
     }
 
     render() {
+        let date = new Date(this.props.timestamp*1000);
         return (
-            <div style={{borderRadius: 10, background:'lightgrey', margin: 10}}>
+            <div style={{borderRadius: 10, background:'lightgrey', margin: 10, padding: 10}}>
+                
+                <div className="rowC">
+                    <p>{date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()}</p>
+                    <a href="#" onClick={(e) => this.onClickUsername(this.props.username)}>{this.props.username}</a>
+                </div>
                 {this.props.content}
-                <br />
-                {this.props.timestamp}
-                <br />
-                <a href="#" onClick={(e) => this.onClickProfileId(this.props.profileId)}>{this.props.profileId}</a>
             </div>
         )
     }

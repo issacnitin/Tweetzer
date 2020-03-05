@@ -35,7 +35,7 @@ export default class Search extends React.Component<IProps, IState> {
                     this.state.profiles?.map((el) => {
                         console.log(el)
                         return <div>
-                            <SearchUserComponent name={el.name} username={el.username} profileId={el.profileId} />
+                            <SearchUserComponent name={el.name} username={el.username} />
                             <br />
                         </div>
                     })

@@ -5,8 +5,8 @@ export default class IdentityAPI extends BaseAPI {
         super()
     }
 
-    async getProfile(profileId: string) {
-        let response = await this.sendRequestAuthorized("/api/v1/profile/getprofile/"+profileId, "GET")
+    async getProfile(username: string) {
+        let response = await this.sendRequestAuthorized("/api/v1/profile/getprofile/"+username, "GET")
         let responseBody = await response.json();
         return {
             body: responseBody,

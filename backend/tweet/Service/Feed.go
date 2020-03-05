@@ -14,10 +14,10 @@ import (
 )
 
 func GetFeed(w http.ResponseWriter, r *http.Request) {
-	profileId, err := GetProfileIdFromClaims(r)
+	username, err := GetUsernameFromClaims(r)
 	printError(err, w)
 	reqbody, err := json.Marshal(map[string]interface{}{
-		"profileId": profileId,
+		"username": username,
 	})
 	printError(err, w)
 
@@ -26,7 +26,7 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 	if len(token) == 0 {
 		http.Error(w, "Failed to get token from request header", http.StatusInternalServerError)
 	}
-	req, err := http.NewRequest("GET", "http://social:8083/api/v1/social/getfollowing/"+profileId, bytes.NewBuffer(reqbody))
+	req, err := http.NewRequest("GET", "http://social:8083/api/v1/social/getfollowing/"+username, bytes.NewBuffer(reqbody))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -45,12 +45,12 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 	var following []string
 	json.Unmarshal(body, &following)
 
-	following = append(following, profileId)
+	following = append(following, username)
 
 	var result []Tweet
 	for _, follower := range following {
 		fmt.Println(follower)
-		filter := bson.D{{"profileId", follower}}
+		filter := bson.D{{"username", follower}}
 		cur, err := mongodb.Tweet.Find(context.TODO(), filter)
 		if err == nil {
 			var x Tweet

@@ -1,3 +1,3 @@
 export class Constants {
-    static profileId?: string = ""
+    static username?: string = ""
 }

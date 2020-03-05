@@ -3,12 +3,12 @@ import { TweetPostAction, StartTweetRefreshAction, EndTweetRefreshAction, StartS
 import { store } from "../../../../Utils/Redux/ConfigureStore";
 import { TweetAPI } from "../../../../Utils/Network/TweetAPI";
 
-export const startTweetRefresh = (profileId: string|null = null) : StartTweetRefreshAction => {
+export const startTweetRefresh = (username: string|null = null) : StartTweetRefreshAction => {
     let tweetApiController = new TweetAPI();
     let tweets: TweetState[] = [];
     let promise: Promise<any> = tweetApiController.refresh();
-    if(profileId != null) {
-        promise = tweetApiController.fetch(profileId);
+    if(username != null) {
+        promise = tweetApiController.fetch(username);
     }
     promise
     .then((res) => {
@@ -18,7 +18,7 @@ export const startTweetRefresh = (profileId: string|null = null) : StartTweetRef
             let t : TweetState = {} as TweetState;
             t.content = tweet["content"]
             t.timestamp = tweet["timestamp"]
-            t.profileId = tweet["profileId"]
+            t.username = tweet["username"]
             tweets.push(t)
         }
         store.dispatch(endTweetRefresh(tweets));
@@ -43,7 +43,7 @@ export const startTweetSearch = (text: string) : StartSearchTweetAction => {
             let t : TweetState = {} as TweetState;
             t.content = tweet["content"]
             t.timestamp = tweet["timestamp"]
-            t.profileId = tweet["profileId"]
+            t.username = tweet["username"]
             tweets.push(t)
         }
         store.dispatch(endTweetRefresh(tweets));
@@ -74,12 +74,12 @@ export const startTweetPost = (content: string, timestamp: number) : TweetPostAc
     
     let tweetApiController = new TweetAPI();
     let tweets = store.getState().Tweet;
-    let profileId = store.getState().System.myid;
-    profileId = !!profileId ? profileId : ""
+    let username = store.getState().System.myusername;
+    username = !!username ? username : ""
     tweetApiController.postTweet(content)
     .then((res) => {
         if(res) {
-            tweetState.unshift({content: content, timestamp: timestamp, profileId: profileId} as TweetState)
+            tweetState.unshift({content: content, timestamp: timestamp, username: username} as TweetState)
         }
         store.dispatch(endTweetPost(tweets));
     })

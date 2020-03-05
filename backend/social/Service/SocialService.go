@@ -54,14 +54,14 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/api/v1/social/follow/{followid}", Follow)
+		r.Get("/api/v1/social/follow/{followusername}", Follow)
 		r.Post("/api/v1/social/unfollow", UnFollow)
 	})
 
 	// Public routes
 	router.Group(func(r chi.Router) {
 		r.Get("/api/v1/social/getfollowers", GetFollowers)
-		r.Get("/api/v1/social/getfollowing/{profileId}", GetFollowing)
+		r.Get("/api/v1/social/getfollowing/{username}", GetFollowing)
 	})
 
 	return router
@@ -76,10 +76,10 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profileId := fmt.Sprintf("%s", claims["profileid"])
+	username := fmt.Sprintf("%s", claims["username"])
 
 	var req struct {
-		followId string `json:"follow"`
+		followUsername string `json:"follow"`
 	}
 
 	b, err := ioutil.ReadAll(r.Body)
@@ -91,13 +91,13 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 	}
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	_, err = neo4jSession.Run(
-		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q:Profile { id: $id2 })
-		MATCH (s:Profile { id: $id2 })-[u:FOLLOWEDBY]->(t:Profile { id: $id1 })
+		`MATCH (p:Profile { id: $username1 })-[r:FOLLOWING]->(q:Profile { id: $id2 })
+		MATCH (s:Profile { id: $username2 })-[u:FOLLOWEDBY]->(t:Profile { id: $id1 })
 		DELETE r 
 		DELETE u`,
 		map[string]interface{}{
-			"id1": profileId,
-			"id2": req.followId,
+			"username1": username,
+			"username2": req.followUsername,
 		})
 	if err != nil {
 		http.Error(w, err.Error(), 500)
@@ -108,17 +108,17 @@ func UnFollow(w http.ResponseWriter, r *http.Request) {
 
 func GetFollowers(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		profileId string `json:"profileId"`
+		username string `json:"username"`
 	}
 
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	json.Unmarshal(b, &req)
 
-	profileId := req.profileId
+	username := req.username
 
 	var rr DatabaseModal
-	filter := bson.D{{"profileId", profileId}}
+	filter := bson.D{{"username", username}}
 	err = mongodb.Social.FindOne(context.TODO(), filter).Decode(&rr)
 	if err != nil {
 		http.Error(w, err.Error(), 500)

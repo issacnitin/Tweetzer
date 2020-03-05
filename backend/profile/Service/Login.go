@@ -47,7 +47,7 @@ func LoginUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	claim := jwt.MapClaims{"profileid": profileInDB.ProfileId}
+	claim := jwt.MapClaims{"username": profileInDB.Username}
 
 	_, token, err := tokenAuth.Encode(claim)
 

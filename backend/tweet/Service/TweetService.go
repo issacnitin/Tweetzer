@@ -57,7 +57,7 @@ func Routes() *chi.Mux {
 
 		r.Get("/api/v1/tweet/search/{searchstring}", SearchTweet)
 		r.Get("/api/v1/tweet/feed", GetFeed)
-		r.Get("/api/v1/tweet/fetch/{profileId}", FetchTweets)
+		r.Get("/api/v1/tweet/fetch/{username}", FetchTweets)
 		r.Get("/api/v1/tweet/search/{searchtext}", SearchTweets)
 		r.Post("/api/v1/tweet/post", PostTweet)
 	})
@@ -96,14 +96,14 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// profileID := fmt.Sprintf("%s", claims["profileid"])
-	// findFilter := bson.D{{"profileId", profileID}}
+	// username := fmt.Sprintf("%s", claims["username"])
+	// findFilter := bson.D{{"username", username}}
 	// updateFilter := bson.M{"$push": bson.M{"tweets": req}}
 	// var options options.UpdateOptions
 	// var bb bool = true
 	// options.Upsert = &bb
 	// _, err = mongodb.Tweet.UpdateOne(context.TODO(), findFilter, updateFilter, &options)
-	req.ProfileId = fmt.Sprintf("%s", claims["profileid"])
+	req.Username = fmt.Sprintf("%s", claims["username"])
 	_, err = mongodb.Tweet.InsertOne(context.TODO(), req)
 	if err != nil {
 		response.result = false
@@ -157,13 +157,13 @@ func SearchTweet(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, result)
 }
 
-func GetProfileIdFromClaims(r *http.Request) (string, error) {
+func GetUsernameFromClaims(r *http.Request) (string, error) {
 	_, claims, err2 := jwtauth.FromContext(r.Context())
 	if err2 != nil {
 		return "", err2
 	}
-	profileId := fmt.Sprintf("%s", claims["profileid"])
-	return profileId, nil
+	username := fmt.Sprintf("%s", claims["username"])
+	return username, nil
 }
 
 func GetTokenFromClaims(r *http.Request) string {

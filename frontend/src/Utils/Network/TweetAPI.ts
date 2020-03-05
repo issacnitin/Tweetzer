@@ -23,8 +23,8 @@ export class TweetAPI extends BaseAPI {
         }
     }
 
-    async fetch(profileId: string) {
-        let response = await this.sendRequestAuthorized("/api/v1/tweet/fetch/" + profileId, "GET");
+    async fetch(username: string) {
+        let response = await this.sendRequestAuthorized("/api/v1/tweet/fetch/" + username, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,
