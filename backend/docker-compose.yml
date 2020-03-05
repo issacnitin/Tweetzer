@@ -81,6 +81,6 @@ services:
       - $HOME/neo4j/import:/var/lib/neo4j/import
       - $HOME/neo4j/plugins:/plugins
     environment:
-      - NEO4J_AUTH=neo4j/abc
+      - NEO4J_AUTH=neo4j/neo4j
     logging:
       driver: "json-file"
