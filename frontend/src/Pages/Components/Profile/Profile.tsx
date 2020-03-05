@@ -79,6 +79,7 @@ export default class Profile extends React.Component<IProps, IState> {
                 <Pagination style={{width:'100%', justifyContent:'center', alignContent: 'center', display:'flex'}}>
                     <Pagination.Item onClick={this.onPrevPageClick}>Prev</Pagination.Item>
                     <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                    <Pagination.Item onClick={this.onNextPageClick}>{this.state.page + 2}</Pagination.Item>
                     <Pagination.Item onClick={this.onNextPageClick}>Next</Pagination.Item>
                 </Pagination>
             </div>

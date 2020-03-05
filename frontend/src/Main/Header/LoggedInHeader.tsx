@@ -39,10 +39,10 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onSearchButtonClick = () => {
-        Constants.searchstring = this.state.searchtext
+        Constants.searchstring = encodeURIComponent(this.state.searchtext)
         store.dispatch(changePage(Page.SEARCH))
-        store.dispatch(startTweetSearch(this.state.searchtext))
-        store.dispatch(startSearchProfile(this.state.searchtext))
+        store.dispatch(startTweetSearch(Constants.searchstring))
+        store.dispatch(startSearchProfile(Constants.searchstring))
     }
 
     handleChange = (e: any) => {
@@ -64,7 +64,7 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
                         </Nav>
                         <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" onChange={(e: any) => this.handleChange(e)} />
-                            <Button variant="outline-success" style={{margin: 10}} onClick={this.onSearchButtonClick}>Search</Button>
+                            <Button variant="outline-success" style={{margin: 10}} onClick={this.onSearchButtonClick} value={Constants.searchstring}>Search</Button>
                             <Button variant="secondary" style={{margin: 10}} onClick={this.onSignoutClick}>Sign Out</Button>
                         </Form>
                     </Navbar.Collapse>

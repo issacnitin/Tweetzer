@@ -28,7 +28,9 @@ export default class Tweet extends React.Component<IProps, IState> {
     }
 
     handleOnHashtagClick = (e: React.MouseEvent) => {
-        let text = e.currentTarget.innerHTML.replace('#', '%23')
+        let text = encodeURIComponent(e.currentTarget.innerHTML)
+        console.log(text)
+        Constants.searchstring = text;
         store.dispatch(startTweetSearch(text))
         store.dispatch(changePage(Page.SEARCH))
     }
@@ -56,8 +58,8 @@ export default class Tweet extends React.Component<IProps, IState> {
                 </div>
                 {
                     this.props.content.split('\n')
-                    .map((v) => {
-                        return <p>{this.getLinkedJSX(v)}</p>
+                    .map((v, i) => {
+                        return <div key={i}>{this.getLinkedJSX(v)}</div>
                     })
                 }
             </div>

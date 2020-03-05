@@ -57,6 +57,7 @@ export default class Home extends React.Component<IProps, IState> {
                 <Pagination style={{width:'100%', display:'flex', justifyContent:'center', alignContent: 'center'}}>
                     <Pagination.Item onClick={this.onPrevPageClick}>Prev</Pagination.Item>
                     <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                    <Pagination.Item onClick={this.onNextPageClick}>{this.state.page + 2}</Pagination.Item>
                     <Pagination.Item onClick={this.onNextPageClick}>Next</Pagination.Item>
                 </Pagination>
             </div>

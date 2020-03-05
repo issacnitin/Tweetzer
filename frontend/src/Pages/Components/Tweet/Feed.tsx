@@ -34,8 +34,8 @@ export default class Feed extends React.Component<IProps, IState> {
             <div style={{width:'100%'}}>
             {
                 this.state.tweets.map((el, index) => (
-                    <div>
-                        <Tweet key={index} content={el.content} timestamp={el.timestamp} username={el.username} />
+                    <div key={index} >
+                        <Tweet content={el.content} timestamp={el.timestamp} username={el.username} />
                         <br />
                     </div>
                 ))

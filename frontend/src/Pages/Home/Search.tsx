@@ -58,8 +58,8 @@ export default class Search extends React.Component<IProps, IState> {
         return (
             <div style={{width:'100%'}}>
                 {
-                    this.state.profiles?.map((el) => {
-                        return <div>
+                    this.state.profiles?.map((el, i) => {
+                        return <div key={i}>
                             <SearchUserComponent name={el.name} username={el.username} />
                             <br />
                         </div>
@@ -68,7 +68,8 @@ export default class Search extends React.Component<IProps, IState> {
                 <Feed />
                 <Pagination style={{display:'flex', justifyContent:'center', width:'100%', alignContent:'center'}}>
                     <Pagination.Prev onClick={this.onPrevPageClick}>Prev</Pagination.Prev>
-                        <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                    <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                    <Pagination.Item onClick={this.onNextPageClick}>{this.state.page + 2}</Pagination.Item>
                     <Pagination.Next onClick={this.onNextPageClick}>Next</Pagination.Next>
                 </Pagination>
             </div>
