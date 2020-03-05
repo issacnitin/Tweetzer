@@ -1,5 +1,5 @@
 frontend/node_modules
-frontend/_build
+frontend/build
 backend/social/src
 backend/profile/src
 backend/tweet/src

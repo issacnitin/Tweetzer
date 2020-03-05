@@ -1,3 +1,5 @@
+#! /usr/bin/sudo
+
 cd frontend
 npm install
 npm run-script build
