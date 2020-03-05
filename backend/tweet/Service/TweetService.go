@@ -16,8 +16,6 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -54,10 +52,9 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/api/v1/tweet/search/{searchstring}", SearchTweet)
-		r.Get("/api/v1/tweet/feed", GetFeed)
-		r.Get("/api/v1/tweet/fetch/{username}", FetchTweets)
-		r.Get("/api/v1/tweet/search/{searchtext}", SearchTweets)
+		r.Get("/api/v1/tweet/feed/{page}", GetFeed)
+		r.Get("/api/v1/tweet/fetch/{username}/{page}", FetchTweets)
+		r.Get("/api/v1/tweet/search/{searchtext}/{page}", SearchTweets)
 		r.Post("/api/v1/tweet/post", PostTweet)
 	})
 
@@ -114,46 +111,6 @@ func PostTweet(w http.ResponseWriter, r *http.Request) {
 	response.result = true
 	response.value = "Insertion successfull"
 	render.JSON(w, r, response)
-}
-
-func SearchTweet(w http.ResponseWriter, r *http.Request) {
-
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	var req common.SearchText
-
-	json.Unmarshal(b, &req)
-
-	filter := bson.D{{"$search", req.SearchText}}
-
-	findOptions := options.Find()
-
-	var result []Tweet
-
-	cur, err := mongodb.Tweet.Find(context.TODO(), filter, findOptions)
-
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-
-	var x Tweet
-	for cur.Next(context.TODO()) {
-		err := cur.Decode(&x)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-
-		fmt.Printf("%s", x)
-		result = append(result, x)
-	}
-
-	render.JSON(w, r, result)
 }
 
 func GetUsernameFromClaims(r *http.Request) (string, error) {

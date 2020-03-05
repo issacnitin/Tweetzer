@@ -32,8 +32,8 @@ export default class Tweet extends React.Component<IProps, IState> {
             <div style={{borderRadius: 10, background:'lightgrey', margin: 10, padding: 10}}>
                 
                 <div className="rowC">
-                    <p>{date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear()}</p>
-                    <a href="#" onClick={(e) => this.onClickUsername(this.props.username)}>{this.props.username}</a>
+                    <p>{date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + "   "}</p>
+                    <a href="#" onClick={(e) => this.onClickUsername(this.props.username)}>@{this.props.username}</a>
                 </div>
                 {this.props.content}
             </div>

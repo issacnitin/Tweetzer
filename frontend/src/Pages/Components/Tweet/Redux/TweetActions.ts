@@ -3,12 +3,12 @@ import { TweetPostAction, StartTweetRefreshAction, EndTweetRefreshAction, StartS
 import { store } from "../../../../Utils/Redux/ConfigureStore";
 import { TweetAPI } from "../../../../Utils/Network/TweetAPI";
 
-export const startTweetRefresh = (username: string|null = null) : StartTweetRefreshAction => {
+export const startTweetRefresh = (username: string|null = null, page: number = 0) : StartTweetRefreshAction => {
     let tweetApiController = new TweetAPI();
     let tweets: TweetState[] = [];
     let promise: Promise<any> = tweetApiController.refresh();
     if(username != null) {
-        promise = tweetApiController.fetch(username);
+        promise = tweetApiController.fetch(username, page);
     }
     promise
     .then((res) => {
@@ -32,10 +32,10 @@ export const startTweetRefresh = (username: string|null = null) : StartTweetRefr
     } as StartTweetRefreshAction;
 }
 
-export const startTweetSearch = (text: string) : StartSearchTweetAction => {
+export const startTweetSearch = (text: string, page: number = 0) : StartSearchTweetAction => {
     let tweetApiController = new TweetAPI();
     let tweets: TweetState[] = [];
-    tweetApiController.search(text)
+    tweetApiController.search(text, page)
     .then((res) => {
         let body = res.body
         tweets = [];

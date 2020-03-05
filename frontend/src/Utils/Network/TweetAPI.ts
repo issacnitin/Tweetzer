@@ -5,8 +5,8 @@ export class TweetAPI extends BaseAPI {
         super();
     }
     
-    async search(text: string) {
-        let response = await this.sendRequestAuthorized("/api/v1/tweet/search/" + text, "GET");
+    async search(text: string, page: number) {
+        let response = await this.sendRequestAuthorized("/api/v1/tweet/search/" + text + "/" + page, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,
@@ -23,8 +23,8 @@ export class TweetAPI extends BaseAPI {
         }
     }
 
-    async fetch(username: string) {
-        let response = await this.sendRequestAuthorized("/api/v1/tweet/fetch/" + username, "GET");
+    async fetch(username: string, page: number) {
+        let response = await this.sendRequestAuthorized("/api/v1/tweet/fetch/" + username + "/" + page, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,
