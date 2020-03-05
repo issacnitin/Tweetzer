@@ -26,11 +26,10 @@ export default class SearchUserComponent extends React.Component<IProps, IState>
 
     render() {
         return (
-            <div style={{margin: 10, backgroundColor:'lightyellow'}}>
-                NAME: {this.props.name}
-                USERNAME: {this.props.username}
-                <br />
-                <Button onClick={this.onProfileClick}>Open </Button>
+            <div style={{backgroundColor:'lightblue', margin: 10, padding: 10, borderRadius: 10}}>
+                {this.props.name}
+                {this.props.name.length > 0 ? <br /> : <div /> }
+                <a href="#" onClick={this.onProfileClick}>@{this.props.username}</a>
             </div>
         )
     }

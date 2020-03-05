@@ -51,11 +51,13 @@ export default class Login extends React.Component<IProps, IState> {
                 this.setState({
                     username: e.target.value
                 });
+                this.validateUsername(e.target.value);
                 break;
             case "email":
                 this.setState({
                     email: e.target.value
                 });
+                break;
             case "password":
                 this.setState({
                     password: e.target.value
@@ -75,9 +77,14 @@ export default class Login extends React.Component<IProps, IState> {
         }
     }
 
-    validateUsername = (e: any) => {
+    validateUsername = (username: string) => {
+        if(username.length == 0) {
+            this.setState({
+                validUsername: false
+            })
+        }
         let identityController = new IdentityAPI();
-        identityController.checkUsername(e.target.value)
+        identityController.checkUsername(username)
         .then((res) => {
             this.setState({
                 validUsername: res.body["result"]
@@ -109,7 +116,7 @@ export default class Login extends React.Component<IProps, IState> {
             }
             let indexOfAt = this.state.email.indexOf('@');
             let indexOfDot = this.state.email.lastIndexOf('.');
-            if(indexOfAt != -1 && indexOfDot != -1 && indexOfAt >= indexOfDot) {
+            if(indexOfAt == -1 || indexOfDot == -1 || indexOfAt >= indexOfDot) {
                 this.setState({
                     formValid: false
                 })
@@ -117,7 +124,7 @@ export default class Login extends React.Component<IProps, IState> {
                 return;
             }
             this.setState({
-                formValid: true
+                formValid: this.state.validUsername
             });
             resolve(true)
         })
@@ -126,7 +133,12 @@ export default class Login extends React.Component<IProps, IState> {
     render() {
 
         let error: JSX.Element = <div />;
-        if(!this.state.formValid) {
+        if(!this.state.validUsername) {
+            error = <div className="alert alert-primary" role="alert">
+                        Empty username or username already exist
+                    </div> 
+        
+        } else if(!this.state.formValid) {
             if(this.state.password.length == 0 || this.state.confirmpassword.length == 0) {
                 error = <div className="alert alert-primary" role="alert">
                             Form invalid

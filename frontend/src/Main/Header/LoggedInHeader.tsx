@@ -6,6 +6,7 @@ import { Page } from '../../Utils/Redux/SystemState';
 import { signOut } from "../../Pages/Components/Authentication/Redux/AuthenticationActions";
 import { startTweetSearch, startTweetRefresh } from "../../Pages/Components/Tweet/Redux/TweetActions";
 import { Constants } from "../../Utils/Constants";
+import "./Header.css";
 
 interface IProps {
 
@@ -52,7 +53,7 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div>
+            <div className="header">
                 <Navbar bg="light" expand="lg">
                     <Navbar.Brand href="#home">Tweetzer</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />

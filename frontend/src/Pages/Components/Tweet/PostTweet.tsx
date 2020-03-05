@@ -40,11 +40,11 @@ export class PostTweet extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div style={{width:'40%', alignItems: 'center', alignContent: "center"}}>
+            <div style={{width:'100%', backgroundColor:'white', padding: 10, margin: 10, borderRadius: 10}}>
                 <Form>
                     <Form.Group controlId="exampleForm.ControlTextarea1">
                         <Form.Label>Post a tweet</Form.Label>
-                        <Form.Control name="tweettext" as="textarea" rows="3" onChange={(e) => this.handleChange(e)} />
+                        <Form.Control style={{resize: 'none'}} name="tweettext" as="textarea" rows="3" onChange={(e) => this.handleChange(e)} />
                     </Form.Group>
                 </Form>
                 <div style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end'}}>

@@ -34,7 +34,7 @@ func SearchTweets(w http.ResponseWriter, r *http.Request) {
 		for cur.Next(context.TODO()) {
 			err := cur.Decode(&x)
 			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				http.Error(w, "Database possibly corrupted. "+err.Error(), http.StatusInternalServerError)
 			}
 
 			fmt.Printf("%s", x)

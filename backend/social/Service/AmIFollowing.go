@@ -38,7 +38,7 @@ func GetAmIFollowing(w http.ResponseWriter, r *http.Request) {
 		Result bool `json:"result"`
 	}
 	for result.Next() {
-		res.Result = true
+		res.Result = result.Record().GetByIndex(0).(bool)
 		render.JSON(w, r, res)
 		return
 	}

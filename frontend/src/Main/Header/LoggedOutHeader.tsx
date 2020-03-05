@@ -28,13 +28,13 @@ export default class LoggedOutHeader extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <div>
+            <div className="header">
                 <Navbar bg="light" expand="lg">
                     <Navbar.Brand href="#home">Tweetzer</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="mr-auto">
-                        <Nav.Link href="#home">Home</Nav.Link>
+                        <Nav.Link href="#home"></Nav.Link>
                         </Nav>
                         <Form inline>
                             <Button variant="primary" onClick={this.onLoginClick} style={{margin: 10}}>Login</Button>

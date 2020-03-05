@@ -5,6 +5,7 @@ import { startTweetRefresh } from "../Tweet/Redux/TweetActions";
 import { Constants } from "../../../Utils/Constants";
 import FollowButton from "./FollowButton";
 import { startLoadProfile } from "../../../Utils/Redux/SystemActions";
+import Pagination from 'react-bootstrap/Pagination';
 
 interface IProps {
     
@@ -14,6 +15,7 @@ interface IState {
     name: string;
     username: string;
     mine: boolean;
+    page: number;
 }
 
 export default class Profile extends React.Component<IProps, IState> {
@@ -23,7 +25,8 @@ export default class Profile extends React.Component<IProps, IState> {
         this.state = {
             name: "",
             username: "",
-            mine: false
+            mine: false,
+            page: 0
         }
         
         if(!!username) {
@@ -42,6 +45,22 @@ export default class Profile extends React.Component<IProps, IState> {
         })
     }
 
+    onNextPageClick = () => {
+        this.setState({
+            page: this.state.page + 1
+        }, () => {
+            store.dispatch(startTweetRefresh(null, this.state.page))
+        })
+    }
+
+    onPrevPageClick = () => {
+        this.setState({
+            page: Math.max(0, this.state.page - 1)
+        }, () => {
+            store.dispatch(startTweetRefresh(null, this.state.page))
+        })
+    }
+
     render() {
         return (
             <div>
@@ -57,6 +76,13 @@ export default class Profile extends React.Component<IProps, IState> {
                     <div />
                 }
                 <Feed />
+                <div style={{width:'100%', justifyContent:'center', alignContent: 'center'}}>
+                    <Pagination style={{width:'30%', alignSelf:'center', justifyContent:'space-around'}}>
+                        <Pagination.Item onClick={this.onPrevPageClick}>Previous</Pagination.Item>
+                        <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                        <Pagination.Item onClick={this.onNextPageClick}>&nbsp;&nbsp;&nbsp;&nbsp;Next</Pagination.Item>
+                    </Pagination>
+                </div>
             </div>
         )
     }
