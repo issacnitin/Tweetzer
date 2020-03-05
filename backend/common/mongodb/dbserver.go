@@ -84,6 +84,19 @@ func createIndexes() {
 
 	mod = mongo.IndexModel{
 		Keys: bson.M{
+			"timestamp": -1, // index in descending order
+		},
+		Options: nil,
+	}
+	ctx, _ = context.WithTimeout(context.Background(), 15*time.Second)
+	ind, err = Tweet.Indexes().CreateOne(ctx, mod, nil)
+	if err != nil {
+		fmt.Println("Error creating index for Tweet collection")
+		fmt.Println("%s", err.Error())
+	}
+
+	mod = mongo.IndexModel{
+		Keys: bson.M{
 			"username": 1, // index in ascending order
 		}, Options: nil,
 	}

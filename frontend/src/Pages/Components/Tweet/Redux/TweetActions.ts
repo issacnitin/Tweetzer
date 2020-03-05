@@ -6,7 +6,7 @@ import { TweetAPI } from "../../../../Utils/Network/TweetAPI";
 export const startTweetRefresh = (username: string|null = null, page: number = 0) : StartTweetRefreshAction => {
     let tweetApiController = new TweetAPI();
     let tweets: TweetState[] = [];
-    let promise: Promise<any> = tweetApiController.refresh();
+    let promise: Promise<any> = tweetApiController.refresh(page);
     if(username != null) {
         promise = tweetApiController.fetch(username, page);
     }

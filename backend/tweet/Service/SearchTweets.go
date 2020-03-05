@@ -28,7 +28,7 @@ func SearchTweets(w http.ResponseWriter, r *http.Request) {
 	findOptions := options.Find()
 	findOptions.Skip = &skip
 	findOptions.Limit = &limit
-	cur, err := mongodb.Tweet.Find(context.TODO(), filter)
+	cur, err := mongodb.Tweet.Find(context.TODO(), filter, findOptions)
 	if err == nil {
 		var x Tweet
 		for cur.Next(context.TODO()) {

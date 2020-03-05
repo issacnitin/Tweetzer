@@ -52,7 +52,7 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/api/v1/profile/search/{searchstring}", SearchUser)
+		r.Get("/api/v1/profile/search/{searchstring}/{page}", SearchUser)
 		r.Get("/api/v1/profile/getme", GetMe)
 		r.Get("/api/v1/profile/getprofile/{username}", GetProfile)
 		r.Get("/api/v1/profile/getuserwithusername/{username}", GetUserWithUsername)

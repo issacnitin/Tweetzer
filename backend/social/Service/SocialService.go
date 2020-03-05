@@ -49,6 +49,7 @@ func Routes() *chi.Mux {
 		r.Get("/api/v1/social/unfollow/{username}", UnFollow)
 		r.Get("/api/v1/social/getfollowers/{username}", GetFollowers)
 		r.Get("/api/v1/social/getfollowing/{username}", GetFollowing)
+		r.Get("/api/v1/social/amifollowing/{username}", GetAmIFollowing)
 	})
 
 	// Public routes

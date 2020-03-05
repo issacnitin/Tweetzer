@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"../../common"
 	"../../common/mongodb"
@@ -21,7 +22,16 @@ func SearchUser(w http.ResponseWriter, r *http.Request) {
 			bson.M{"name": bson.M{"$regex": ss}},
 			bson.M{"username": bson.M{"$regex": ss}},
 		}}
+
+	var limit int64 = 10
+	l, err := strconv.ParseInt(chi.URLParam(r, "page"), 10, 64)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	var skip int64 = l * limit
 	findOptions := options.Find()
+	findOptions.Skip = &skip
+	findOptions.Limit = &limit
 
 	var result []common.User
 

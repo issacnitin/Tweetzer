@@ -14,8 +14,8 @@ export class TweetAPI extends BaseAPI {
         }
     }
 
-    async refresh() {
-        let response = await this.sendRequestAuthorized("/api/v1/tweet/feed", "GET");
+    async refresh(page: number) {
+        let response = await this.sendRequestAuthorized("/api/v1/tweet/feed/" + page, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,
