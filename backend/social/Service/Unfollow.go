@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-chi/chi"
-
 	neo4j "../../common/neo4j"
+	"github.com/go-chi/chi"
 	"github.com/go-chi/jwtauth"
 	"github.com/go-chi/render"
 )
 
-func Follow(w http.ResponseWriter, r *http.Request) {
+func UnFollow(w http.ResponseWriter, r *http.Request) {
 	_, claims, err2 := jwtauth.FromContext(r.Context())
 
 	if err2 != nil {
@@ -21,19 +20,18 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 	}
 
 	username := fmt.Sprintf("%s", claims["username"])
-	var followusername = chi.URLParam(r, "username")
+	unfollowusername := chi.URLParam(r, "username")
 
-	fmt.Println(username + " following " + followusername)
+	fmt.Println(username + "    " + unfollowusername)
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	_, err := neo4jSession.Run(
-		`MERGE (p:Profile { username: $username1 })
-		MERGE (q:Profile { username: $username2 })
-		MERGE (p)-[r:FOLLOWING]->(q)-[s:FOLLOWEDBY]->(p)
-		RETURN p,q,r,s`, map[string]interface{}{
+		`MATCH (p:Profile { username: $username1 })-[r:FOLLOWING]->(q:Profile { username: $username2 })
+		MATCH (s:Profile { username: $username2 })-[u:FOLLOWEDBY]->(t:Profile { username: $username1 })
+		DELETE r, u`,
+		map[string]interface{}{
 			"username1": username,
-			"username2": followusername,
+			"username2": unfollowusername,
 		})
-
 	if err != nil {
 		http.Error(w, err.Error(), 500)
 	}
@@ -41,12 +39,12 @@ func Follow(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, "Success")
 }
 
-func GetFollowing(w http.ResponseWriter, r *http.Request) {
+func GetFollowers(w http.ResponseWriter, r *http.Request) {
 	username := chi.URLParam(r, "username")
 	var followings = []string{}
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	result, err := neo4jSession.Run(
-		`MATCH (p:Profile { username: $username1 })-[r:FOLLOWING]->(q)
+		`MATCH (p:Profile { username: $username1 })-[r:FOLLOWEDBY]->(q)
 		RETURN q`,
 		map[string]interface{}{
 			"username1": username,

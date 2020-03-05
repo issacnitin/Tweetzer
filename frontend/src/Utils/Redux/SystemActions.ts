@@ -92,6 +92,7 @@ export const startFetchMyDetails = () : SetMyUsernameAction => {
             store.dispatch(startLoadProfile(res.body["username"]))
             //store.dispatch(startGetFollowers(res.body["username"]))
             store.dispatch(startGetFollowing(res.body["username"]))
+            store.dispatch(startGetFollowers(res.body["username"]))
         }
     })
     .catch((err) => {

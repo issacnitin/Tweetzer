@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"time"
 
 	"../../common"
@@ -168,11 +167,6 @@ func GetUsernameFromClaims(r *http.Request) (string, error) {
 
 func GetTokenFromClaims(r *http.Request) string {
 	reqToken := r.Header.Get("Authorization")
-	splitToken := strings.Split(reqToken, "Bearer")
-	if len(splitToken) < 2 {
-		return ""
-	}
-	reqToken = splitToken[1]
 	fmt.Println(reqToken)
 	return reqToken
 }

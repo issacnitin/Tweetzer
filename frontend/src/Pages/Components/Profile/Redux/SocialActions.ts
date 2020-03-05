@@ -23,12 +23,12 @@ export interface EndFollowAction {
 
 export interface StartUnfollowAction {
     type: typeof START_UNFOLLOW;
-    following: string;
+    follower: string;
 }
 
 export interface EndUnfollowAction {
     type: typeof END_UNFOLLOW;
-    following: string;
+    follower: string;
 }
 
 export interface StartGetFollowersAction {
@@ -92,6 +92,37 @@ export const endFollowFail = (): EndFollowAction => {
     } as EndFollowAction;
 }
 
+export const startUnfollow = (username: string) : StartUnfollowAction => {
+    let socialController = new SocialAPI();
+    socialController.unfollow(username)
+    .then((res) => {
+        if(!!res.body) {
+            store.dispatch(endUnfollowSuccess(username))
+        }
+    })
+    .catch((err) => {
+        store.dispatch(endUnfollowFail())
+    })
+    return {
+        type: "START_UNFOLLOW",
+        follower: ""
+    } as StartUnfollowAction;
+}
+
+export const endUnfollowSuccess = (following: string): EndUnfollowAction => {
+    return {
+        type: "END_UNFOLLOW",
+        follower: following
+    } as EndUnfollowAction;
+}
+
+export const endUnfollowFail = (): EndFollowAction => {
+    return {
+        type: "END_FOLLOW",
+        following: ""
+    } as EndFollowAction;
+}
+
 export const updateSocialState = () => {
     
 }
@@ -125,9 +156,9 @@ export const endGetFollowingFail = () : EndGetFollowingAction => {
     }
 }
 
-export const startGetFollowers = () : StartGetFollowersAction => {
+export const startGetFollowers = (username: string) : StartGetFollowersAction => {
     let socialController = new SocialAPI();
-    socialController.getFollowers()
+    socialController.getFollowers(username)
     .then((res) => {
         store.dispatch(endGetFollowersSuccess(res.body as string[]))
     })

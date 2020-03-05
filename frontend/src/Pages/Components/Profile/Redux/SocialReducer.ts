@@ -20,6 +20,22 @@ const socialReducer = (state = socialReducerDefaultState, action: SocialActionTy
                 followers: state.followers,
                 following: [...state.following, action.following] 
             } as SocialState);
+        case "START_UNFOLLOW":
+            return Object.assign({}, {
+                    followers: state.followers,
+                    following: state.following
+                })
+        case "END_UNFOLLOW":
+            let following2 = state.following;
+            let index = following2.indexOf(action.follower);
+            following2 = following2.filter((v) => {
+                return v != action.follower;
+            })
+            return Object.assign({}, {
+                    followers: state.followers,
+                    following: following2
+                })
+            
         case "START_GET_FOLLOWERS":
             return state;
         case "END_GET_FOLLOWERS":

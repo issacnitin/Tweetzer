@@ -1,7 +1,7 @@
 import React from "react"
 import { Button } from "react-bootstrap";
 import { store } from "../../../Utils/Redux/ConfigureStore";
-import { startFollow } from "./Redux/SocialActions";
+import { startFollow, startUnfollow } from "./Redux/SocialActions";
 
 interface IProps {
     username: string
@@ -32,7 +32,7 @@ export default class FollowButton extends React.Component<IProps, IState> {
     }
     
     onUnfollowButtonClick = () => {
-        // store.dispatch(startUnfollow(this.props.username))
+        store.dispatch(startUnfollow(this.props.username))
     }
 
     render() {

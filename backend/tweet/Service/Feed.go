@@ -31,7 +31,7 @@ func GetFeed(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+token)
+	req.Header.Set("Authorization", token)
 	resp, err := client.Do(req)
 
 	defer resp.Body.Close()

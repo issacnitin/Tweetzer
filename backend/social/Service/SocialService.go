@@ -1,23 +1,14 @@
 package social
 
 import (
-	"context"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-
-	neo4j "../../common/neo4j"
 
 	"../../common"
-	mongodb "../../common/mongodb"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/cors"
 	"github.com/go-chi/jwtauth"
-	"github.com/go-chi/render"
-	"go.mongodb.org/mongo-driver/bson"
 )
 
 var tokenAuth *jwtauth.JWTAuth
@@ -54,75 +45,15 @@ func Routes() *chi.Mux {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(jwtauth.Authenticator)
 
-		r.Get("/api/v1/social/follow/{followusername}", Follow)
-		r.Post("/api/v1/social/unfollow", UnFollow)
+		r.Get("/api/v1/social/follow/{username}", Follow)
+		r.Get("/api/v1/social/unfollow/{username}", UnFollow)
+		r.Get("/api/v1/social/getfollowers/{username}", GetFollowers)
+		r.Get("/api/v1/social/getfollowing/{username}", GetFollowing)
 	})
 
 	// Public routes
 	router.Group(func(r chi.Router) {
-		r.Get("/api/v1/social/getfollowers", GetFollowers)
-		r.Get("/api/v1/social/getfollowing/{username}", GetFollowing)
 	})
 
 	return router
-}
-
-func UnFollow(w http.ResponseWriter, r *http.Request) {
-	_, claims, err2 := jwtauth.FromContext(r.Context())
-
-	if err2 != nil {
-		fmt.Printf("%s", err2.Error())
-		http.Error(w, err2.Error(), http.StatusBadRequest)
-		return
-	}
-
-	username := fmt.Sprintf("%s", claims["username"])
-
-	var req struct {
-		followUsername string `json:"follow"`
-	}
-
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	json.Unmarshal(b, &req)
-
-	if err != nil {
-		http.Error(w, "Some error", 500)
-	}
-	neo4jSession := neo4j.GetSessionWithReadWrite()
-	_, err = neo4jSession.Run(
-		`MATCH (p:Profile { username: $username1 })-[r:FOLLOWING]->(q:Profile { username: $username2 })
-		MATCH (s:Profile { username: $username2 })-[u:FOLLOWEDBY]->(t:Profile { username: $username2 })
-		DELETE r 
-		DELETE u`,
-		map[string]interface{}{
-			"username1": username,
-			"username2": req.followUsername,
-		})
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-
-	render.JSON(w, r, "Success")
-}
-
-func GetFollowers(w http.ResponseWriter, r *http.Request) {
-	var req struct {
-		username string `json:"username"`
-	}
-
-	b, err := ioutil.ReadAll(r.Body)
-	defer r.Body.Close()
-	json.Unmarshal(b, &req)
-
-	username := req.username
-
-	var rr DatabaseModal
-	filter := bson.D{{"username", username}}
-	err = mongodb.Social.FindOne(context.TODO(), filter).Decode(&rr)
-	if err != nil {
-		http.Error(w, err.Error(), 500)
-	}
-
-	render.JSON(w, r, rr.following)
 }

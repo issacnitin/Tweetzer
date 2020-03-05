@@ -15,7 +15,7 @@ export default class SocialAPI extends BaseAPI {
     }
     
     async unfollow(id: string) {
-        let response = await this.sendRequestAuthorized("/api/v1/social/unfollow", "POST", {"follow": id});
+        let response = await this.sendRequestAuthorized("/api/v1/social/unfollow/" + id, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,
@@ -23,8 +23,8 @@ export default class SocialAPI extends BaseAPI {
         }
     }
 
-    async getFollowers() {
-        let response = await this.sendRequestAuthorized("/api/v1/social/getfollowers", "GET");
+    async getFollowers(username: string) {
+        let response = await this.sendRequestAuthorized("/api/v1/social/getfollowers/" + username, "GET");
         let responseJSON = await response.json();
         return {
             body: responseJSON,
