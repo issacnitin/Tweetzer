@@ -2,19 +2,22 @@ import React from "react";
 import Tweet from './Tweet';
 import { TweetState } from "./Redux/TweetState";
 import { store } from "../../../Utils/Redux/ConfigureStore";
+
 interface IProps {
     
 }
 
 interface IState {
-    tweets: TweetState[]
+    tweets: TweetState[],
+    page: number
 }
 
 export default class Feed extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
         this.state = {
-            tweets: store.getState().Tweet
+            tweets: store.getState().Tweet,
+            page: 0
         }
 
         store.subscribe(() => {

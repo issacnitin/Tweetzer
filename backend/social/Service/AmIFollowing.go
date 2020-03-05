@@ -23,9 +23,8 @@ func GetAmIFollowing(w http.ResponseWriter, r *http.Request) {
 	var followusername = chi.URLParam(r, "username")
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	result, err := neo4jSession.Run(
-		`MATCH (p:Profile { username: $username1 })
-		MATCH (q:Profile { username: $username2 })
-		RETURN EXISTS( (p)-[:FOLLOWING]-(b) )`, map[string]interface{}{
+		`MATCH (p:Profile { username: $username1 }), (q:Profile { username: $username2 })
+		RETURN EXISTS( (p)-[:FOLLOWING]-(q) )`, map[string]interface{}{
 			"username1": username,
 			"username2": followusername,
 		})
@@ -34,8 +33,13 @@ func GetAmIFollowing(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 500)
 		return
 	}
+
+	var res struct {
+		Result bool `json:"result"`
+	}
 	for result.Next() {
-		render.JSON(w, r, "Success")
+		res.Result = true
+		render.JSON(w, r, res)
 		return
 	}
 	return

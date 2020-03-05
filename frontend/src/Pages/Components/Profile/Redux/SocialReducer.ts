@@ -35,21 +35,6 @@ const socialReducer = (state = socialReducerDefaultState, action: SocialActionTy
                     followers: state.followers,
                     following: following2
                 })
-            
-        case "START_GET_FOLLOWERS":
-            return state;
-        case "END_GET_FOLLOWERS":
-            return Object.assign({}, state, {
-                followers: action.followers,
-                following: state.following
-            } as SocialState);
-        case "START_GET_FOLLOWING":
-            return state;
-        case "END_GET_FOLLOWING":
-            return Object.assign({}, state, {
-                followers: state.followers,
-                following: action.following
-            } as SocialState);
         default:
             return state;
     }

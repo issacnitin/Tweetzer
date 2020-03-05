@@ -2,6 +2,7 @@ import React from "react"
 import { Button } from "react-bootstrap";
 import { store } from "../../../Utils/Redux/ConfigureStore";
 import { startFollow, startUnfollow } from "./Redux/SocialActions";
+import SocialAPI from "../../../Utils/Network/SocialAPI";
 
 interface IProps {
     username: string
@@ -14,19 +15,25 @@ interface IState {
 export default class FollowButton extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props)
-        let state = store.getState().Social
         this.state = {
-            following: state.following.indexOf(this.props.username) > -1
+            following: false
         }
-        store.subscribe(() => {
-            let state = store.getState().Social.following
-            console.log(state)
-            this.setState({
-                following: state.indexOf(this.props.username) > -1
-            })
-        })
-    }
 
+    }
+    componentWillReceiveProps(nextProps: IProps) {
+        if(nextProps.username != this.props.username) {
+            let apiController = new SocialAPI();
+            apiController.isFollowing(nextProps.username)
+            .then((res) => {
+                this.setState({
+                    following: "result" in res.body && res.body["result"] == "true"
+                })
+            })
+            .catch((err) => {
+                console.error(err)
+            })
+        }
+    }
     onFollowButtonClick = () => {
         store.dispatch(startFollow(this.props.username))
     }

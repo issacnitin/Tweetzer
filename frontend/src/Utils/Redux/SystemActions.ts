@@ -1,9 +1,7 @@
 import { Page, ProfileModal } from './SystemState';
 import { store } from './ConfigureStore';
 import IdentityAPI from "../Network/IdentityAPI";
-import { startTweetRefresh } from '../../Pages/Components/Tweet/Redux/TweetActions';
 import { Constants } from '../Constants';
-import { startGetFollowers, startGetFollowing } from '../../Pages/Components/Profile/Redux/SocialActions';
 
 export const START_LOAD_PROFILE = "START_LOAD_PROFILE";
 export const END_LOAD_PROFILE = "END_LOAD_PROFILE";
@@ -90,9 +88,6 @@ export const startFetchMyDetails = () : SetMyUsernameAction => {
         if(!!res && !!res.body) {
             store.dispatch(endSetMyUsername(res.body["username"]))
             store.dispatch(startLoadProfile(res.body["username"]))
-            //store.dispatch(startGetFollowers(res.body["username"]))
-            store.dispatch(startGetFollowing(res.body["username"]))
-            store.dispatch(startGetFollowers(res.body["username"]))
         }
     })
     .catch((err) => {
@@ -111,9 +106,9 @@ export const endSetMyUsername = (username: string) : SetMyUsernameAction => {
     }
 }
 
-export const startSearchProfile = (text: string) : StartSearchProfileAction => {
+export const startSearchProfile = (text: string, page: number = 0) : StartSearchProfileAction => {
     let identityController = new IdentityAPI();
-    identityController.searchUser(text)
+    identityController.searchUser(text, page)
     .then((res) => {
         let body = res.body;
         let modals: ProfileModal[] = [];

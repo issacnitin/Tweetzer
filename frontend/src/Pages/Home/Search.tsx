@@ -3,13 +3,19 @@ import Feed from "../Components/Tweet/Feed";
 import { store } from "../../Utils/Redux/ConfigureStore";
 import SearchUserComponent from "./SearchUserComponent";
 import { ProfileModal } from "../../Utils/Redux/SystemState";
+import Pagination from 'react-bootstrap/Pagination';
+import { startTweetRefresh } from "../Components/Tweet/Redux/TweetActions";
+import { startSearchProfile } from "../../Utils/Redux/SystemActions";
+import { Constants } from "../../Utils/Constants";
 
 interface IProps {
 
 }
 
 interface IState {
-    profiles?: ProfileModal[]
+    searchstring: string,
+    profiles?: ProfileModal[],
+    page: number
 }
 
 
@@ -18,7 +24,9 @@ export default class Search extends React.Component<IProps, IState> {
         super(props)
         let state = store.getState().System.searchProfiles;
         this.state = {
-            profiles: state
+            searchstring: !!Constants.searchstring ? Constants.searchstring : "",
+            profiles: state,
+            page: 0
         }
         store.subscribe(() => {
             let profiles = store.getState().System.searchProfiles
@@ -28,12 +36,29 @@ export default class Search extends React.Component<IProps, IState> {
         })
     }
 
+    onNextPageClick = () => {
+        this.setState({
+            page: this.state.page + 1
+        }, () => {
+            store.dispatch(startSearchProfile(this.state.searchstring, this.state.page))
+            store.dispatch(startTweetRefresh(null, this.state.page))
+        })
+    }
+
+    onPrevPageClick = () => {
+        this.setState({
+            page: Math.max(0, this.state.page - 1)
+        }, () => {
+            store.dispatch(startSearchProfile(this.state.searchstring, this.state.page))
+            store.dispatch(startTweetRefresh(null, this.state.page))
+        })
+    }
+
     render() {
         return (
             <div style={{width:'100%'}}>
                 {
                     this.state.profiles?.map((el) => {
-                        console.log(el)
                         return <div>
                             <SearchUserComponent name={el.name} username={el.username} />
                             <br />
@@ -41,6 +66,11 @@ export default class Search extends React.Component<IProps, IState> {
                     })
                 }
                 <Feed />
+                <Pagination style={{width:'100%', alignSelf:'center'}}>
+                    <Pagination.Prev onClick={this.onPrevPageClick}/>
+                        <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                    <Pagination.Next onClick={this.onNextPageClick}/>
+                </Pagination>
             </div>
         )
     }

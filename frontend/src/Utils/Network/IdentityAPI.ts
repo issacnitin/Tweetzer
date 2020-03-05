@@ -32,8 +32,8 @@ export default class IdentityAPI extends BaseAPI {
         }
     }
 
-    async searchUser(text: string) {
-        let response = await this.sendRequestAuthorized("/api/v1/profile/search/" + text, "GET")
+    async searchUser(text: string, page: number) {
+        let response = await this.sendRequestAuthorized("/api/v1/profile/search/" + text + "/" + page, "GET")
         let responseBody = await response.json();
         return {
             body: responseBody,

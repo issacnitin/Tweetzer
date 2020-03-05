@@ -46,9 +46,9 @@ export default class Profile extends React.Component<IProps, IState> {
         return (
             <div>
                 <div>
-                    <p>NAME: {this.state.name}</p>
+                    <p>{this.state.name}</p>
                     <br />
-                    <p>USERNAME: {this.state.username}</p>
+                    <p>@{this.state.username}</p>
                 </div>
                 {
                     !this.state.mine ? 

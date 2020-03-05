@@ -38,6 +38,7 @@ export default class LoggedInHeader extends React.Component<IProps, IState> {
     }
 
     onSearchButtonClick = () => {
+        Constants.searchstring = this.state.searchtext
         store.dispatch(changePage(Page.SEARCH))
         store.dispatch(startTweetSearch(this.state.searchtext))
         store.dispatch(startSearchProfile(this.state.searchtext))

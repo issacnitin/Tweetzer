@@ -4,7 +4,6 @@ import { AppState, store } from "../../../../Utils/Redux/ConfigureStore";
 import { changePage, startFetchMyDetails } from "../../../../Utils/Redux/SystemActions";
 import { Page } from "../../../../Utils/Redux/SystemState";
 import AuthenticationAPI from "../../../../Utils/Network/AuthenticationAPI";
-import { startGetFollowing } from "../../Profile/Redux/SocialActions";
 
 let authAPIController = new AuthenticationAPI();
 
