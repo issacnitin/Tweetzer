@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"../../common"
+	"../../common/redis"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -39,6 +40,7 @@ func Routes() *chi.Mux {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	})
 	router.Use(cors.Handler)
+	router.Use(redis.RateLimit(10))
 	// Protected routes
 	router.Group(func(r chi.Router) {
 		// Seek, verify and validate JWT tokens

@@ -46,6 +46,7 @@ func Routes() *chi.Mux {
 	})
 
 	router.Use(cors.Handler)
+	router.Use(redis.RateLimit(10))
 	// Protected routes
 	router.Group(func(r chi.Router) {
 		// Seek, verify and validate JWT tokens

@@ -1,13 +1,13 @@
 package redis
 
 import (
-	"time"
-
 	"github.com/go-redis/redis"
+	redis_rate "github.com/go-redis/redis_rate"
 )
 
 // Instance : Singleton Instance
 var Instance *redis.Client
+var Limiter *redis_rate.Limiter
 
 // GeoLocation : redis.GeoLocation
 type GeoLocation = redis.GeoLocation
@@ -21,18 +21,10 @@ func openDB() {
 		Password: "SomePassword1234", // no password set
 		DB:       0,                  // use default DB
 	})
+
+	Limiter = redis_rate.NewLimiter(Instance)
 }
 
 func init() {
 	openDB()
-	go healthChecks()
-}
-
-func healthChecks() {
-	for true {
-		if Instance == nil {
-			openDB()
-		}
-		time.Sleep(10 * time.Second)
-	}
 }
