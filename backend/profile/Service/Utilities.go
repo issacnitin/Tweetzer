@@ -35,10 +35,8 @@ func GetEmailFromUsername() string {
 func _RegisterUser(req common.User) (common.User, *mongo.InsertOneResult, error) {
 
 	var result common.User
-	result.Country = req.Country
 	result.Email = req.Email
 	result.Name = req.Name
-	result.Phone = req.Phone
 	// BIG TODO: Hash Password
 	// TODO: Assuming single email, that need not be the case, user can have multiple emails linked to same account
 	// For example, registration with a non google email and trying to register later with a google email

@@ -7,10 +7,8 @@ type Token struct {
 }
 
 type User struct {
-	Name     string `json:"name"`
-	Email    string `json:"email"`
-	Phone    string `json:"phone"`
-	Country  string `json:"country"`
+	Name     string `json:"name" bson:"name"`
+	Email    string `json:"email" bson:"email"`
 	Username string `json:"username" bson:"username"`
 	Password string `json:"password" bson:"password"`
 }

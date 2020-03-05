@@ -111,7 +111,6 @@ func GetUserWithUsername(w http.ResponseWriter, r *http.Request) {
 
 	err := mongodb.Profile.FindOne(context.TODO(), filter).Decode(&result)
 	result.Password = ""
-	result.Phone = ""
 	result.Email = ""
 
 	if err != nil {

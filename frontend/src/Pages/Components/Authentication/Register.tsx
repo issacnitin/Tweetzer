@@ -171,6 +171,7 @@ export default class Login extends React.Component<IProps, IState> {
                             placeholder="First and Last Name"
                             aria-label="First and Last Name"
                             aria-describedby="basic-addon1"
+                            onChange={this.handleChange}
                             />
                         </InputGroup>
                         <InputGroup className="mb-3">

@@ -35,7 +35,7 @@ export class PostTweet extends React.Component<IProps, IState> {
     }
 
     onPostTweetButtonClick = () => {
-        store.dispatch(startTweetPost(this.state.tweetText, (new Date()).getTime()));
+        store.dispatch(startTweetPost(this.state.tweetText, (new Date()).getTime()/1000));
     }
 
     render() {

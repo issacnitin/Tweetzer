@@ -46,10 +46,10 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 	var followings = []string{}
 	neo4jSession := neo4j.GetSessionWithReadWrite()
 	result, err := neo4jSession.Run(
-		`MATCH (p:Profile { id: $id1 })-[r:FOLLOWING]->(q)
+		`MATCH (p:Profile { username: $username1 })-[r:FOLLOWING]->(q)
 		RETURN q`,
 		map[string]interface{}{
-			"id1": username,
+			"username1": username,
 		})
 
 	if err != nil {
@@ -58,7 +58,7 @@ func GetFollowing(w http.ResponseWriter, r *http.Request) {
 		for result.Next() {
 			values := result.Record().Values()
 			for _, v := range values {
-				followings = append(followings, v.(neo4j.Node).Props()["id"].(string))
+				followings = append(followings, v.(neo4j.Node).Props()["username"].(string))
 			}
 		}
 		render.JSON(w, r, followings)

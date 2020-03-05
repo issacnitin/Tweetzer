@@ -49,7 +49,7 @@ export const startSignUp = (name: string, username: string, email: string, passw
     authAPIController.signUp(name, username, email, password)
     .then((res) => {
         let body = res.body
-        authState.authToken = !!body ? body.token : "";
+        authState.authToken = !!body ? body["Token"] : "";
         authState.tokenRefreshTimestamp = (new Date()).getTime();
         localStorage.setItem('username', username ? username : email);
         localStorage.setItem('password', password);
