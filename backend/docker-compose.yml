@@ -27,6 +27,13 @@ services:
     - "mongo"
     - "redis"
     - "neo4jdb"
+  nodejs:
+    image: node:latest
+    volumes:
+      - ../frontend:/home/web
+    working_dir: /home/web
+    command: npm install
+    command: npm run-script build
   redis:
     image: redis:latest
     ports:
@@ -45,6 +52,8 @@ services:
     environment:
       - NGINX_HOST=tweetzer.com
       - NGINX_PORT=80
+    depends_on:
+    - "nodejs"
   mongo:
     image: mongo:latest
     ports:
