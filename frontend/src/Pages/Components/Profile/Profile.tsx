@@ -49,7 +49,7 @@ export default class Profile extends React.Component<IProps, IState> {
         this.setState({
             page: this.state.page + 1
         }, () => {
-            store.dispatch(startTweetRefresh(null, this.state.page))
+            store.dispatch(startTweetRefresh(this.state.username, this.state.page))
         })
     }
 
@@ -57,7 +57,7 @@ export default class Profile extends React.Component<IProps, IState> {
         this.setState({
             page: Math.max(0, this.state.page - 1)
         }, () => {
-            store.dispatch(startTweetRefresh(null, this.state.page))
+            store.dispatch(startTweetRefresh(this.state.username, this.state.page))
         })
     }
 
@@ -76,13 +76,11 @@ export default class Profile extends React.Component<IProps, IState> {
                     <div />
                 }
                 <Feed />
-                <div style={{width:'100%', justifyContent:'center', alignContent: 'center'}}>
-                    <Pagination style={{width:'30%', alignSelf:'center', justifyContent:'space-around'}}>
-                        <Pagination.Item onClick={this.onPrevPageClick}>Previous</Pagination.Item>
-                        <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
-                        <Pagination.Item onClick={this.onNextPageClick}>&nbsp;&nbsp;&nbsp;&nbsp;Next</Pagination.Item>
-                    </Pagination>
-                </div>
+                <Pagination style={{width:'100%', justifyContent:'center', alignContent: 'center', display:'flex'}}>
+                    <Pagination.Item onClick={this.onPrevPageClick}>Prev</Pagination.Item>
+                    <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                    <Pagination.Item onClick={this.onNextPageClick}>Next</Pagination.Item>
+                </Pagination>
             </div>
         )
     }

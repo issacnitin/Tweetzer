@@ -54,13 +54,11 @@ export default class Home extends React.Component<IProps, IState> {
                 {this.state.myusername}
                 <PostTweet />
                 <Feed />
-                <div style={{width:'100%', justifyContent:'center', alignContent: 'center'}}>
-                    <Pagination style={{width:'30%', alignSelf:'center', justifyContent:'space-around'}}>
-                        <Pagination.Item onClick={this.onPrevPageClick}>Previous</Pagination.Item>
-                        <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
-                        <Pagination.Item onClick={this.onNextPageClick}>&nbsp;&nbsp;&nbsp;&nbsp;Next</Pagination.Item>
-                    </Pagination>
-                </div>
+                <Pagination style={{width:'100%', display:'flex', justifyContent:'center', alignContent: 'center'}}>
+                    <Pagination.Item onClick={this.onPrevPageClick}>Prev</Pagination.Item>
+                    <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
+                    <Pagination.Item onClick={this.onNextPageClick}>Next</Pagination.Item>
+                </Pagination>
             </div>
         )
     }

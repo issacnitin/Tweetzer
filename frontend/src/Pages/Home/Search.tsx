@@ -4,7 +4,7 @@ import { store } from "../../Utils/Redux/ConfigureStore";
 import SearchUserComponent from "./SearchUserComponent";
 import { ProfileModal } from "../../Utils/Redux/SystemState";
 import Pagination from 'react-bootstrap/Pagination';
-import { startTweetRefresh } from "../Components/Tweet/Redux/TweetActions";
+import { startTweetSearch } from "../Components/Tweet/Redux/TweetActions";
 import { startSearchProfile } from "../../Utils/Redux/SystemActions";
 import { Constants } from "../../Utils/Constants";
 
@@ -41,7 +41,7 @@ export default class Search extends React.Component<IProps, IState> {
             page: this.state.page + 1
         }, () => {
             store.dispatch(startSearchProfile(this.state.searchstring, this.state.page))
-            store.dispatch(startTweetRefresh(null, this.state.page))
+            store.dispatch(startTweetSearch(!!Constants.searchstring? Constants.searchstring: "", this.state.page))
         })
     }
 
@@ -50,7 +50,7 @@ export default class Search extends React.Component<IProps, IState> {
             page: Math.max(0, this.state.page - 1)
         }, () => {
             store.dispatch(startSearchProfile(this.state.searchstring, this.state.page))
-            store.dispatch(startTweetRefresh(null, this.state.page))
+            store.dispatch(startTweetSearch(!!Constants.searchstring? Constants.searchstring: "", this.state.page))
         })
     }
 
@@ -66,10 +66,10 @@ export default class Search extends React.Component<IProps, IState> {
                     })
                 }
                 <Feed />
-                <Pagination style={{width:'100%', alignSelf:'center'}}>
-                    <Pagination.Prev onClick={this.onPrevPageClick}/>
+                <Pagination style={{display:'flex', justifyContent:'center', width:'100%', alignContent:'center'}}>
+                    <Pagination.Prev onClick={this.onPrevPageClick}>Prev</Pagination.Prev>
                         <Pagination.Item active>{this.state.page + 1}</Pagination.Item>
-                    <Pagination.Next onClick={this.onNextPageClick}/>
+                    <Pagination.Next onClick={this.onNextPageClick}>Next</Pagination.Next>
                 </Pagination>
             </div>
         )
