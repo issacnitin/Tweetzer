@@ -5,8 +5,6 @@ import (
 	redis_rate "github.com/go-redis/redis_rate"
 )
 
-var Nil := redis.Nil
-
 // Instance : Singleton Instance
 var Instance *redis.Client
 var Limiter *redis_rate.Limiter

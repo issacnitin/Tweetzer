@@ -13,6 +13,7 @@ import (
 	"../../common/mongodb"
 	"../../common/redis"
 	"github.com/go-chi/render"
+	redis_org "github.com/go-redis/redis"
 )
 
 func RegisterUser(w http.ResponseWriter, r *http.Request) {
@@ -36,9 +37,9 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		req.Username = _GenerateUsername()
 	}
 
-	keyexist := redis.Instance.Get(req.Username)
-	if keyexist != redis.Nil {
-		http.Error(w, "Registration failed, Username exist", 500)
+	_, err3 := redis.Instance.Get(req.Username).Result()
+	if err3 != redis_org.Nil {
+		http.Error(w, "Registration failed, Username exist", http.StatusInternalServerError)
 		return
 	}
 
