@@ -44,8 +44,10 @@ services:
   nginx:
     image: nginx
     volumes:
-      - ../frontend/build/:/home/web/
+      - ../frontend/build/:/home/tweetzer/
+      - ../../beerwithai.com/:/home/beerwithai/
       - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./certs/:/etc/nginx/certs/
     ports:
       - "80:80"
       - "443:443"
