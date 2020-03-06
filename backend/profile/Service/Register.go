@@ -36,6 +36,12 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		req.Username = _GenerateUsername()
 	}
 
+	keyexist := redis.Instance.Get(req.Username)
+	if keyexist != redis.Nil {
+		http.Error(w, "Registration failed, Username exist", 500)
+		return
+	}
+
 	// BIG TODO: Hash Password
 	// TODO: Assuming single email, that need not be the case, user can have multiple emails linked to same account
 	// For example, registration with a non google email and trying to register later with a google email
