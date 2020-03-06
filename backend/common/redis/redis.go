@@ -5,7 +5,7 @@ import (
 	redis_rate "github.com/go-redis/redis_rate"
 )
 
-const Nil redis.RedisError = redis.Nil
+var Nil := redis.Nil
 
 // Instance : Singleton Instance
 var Instance *redis.Client
